@@ -6,6 +6,9 @@
 <div>-------> app.js</div>
 <div>-------> style.css</div>
 <div>-------> index.html</div>
+<br/>
 <img src="art/imock_about.png">
+<br/>
 <img src="art/imock_questions.png">
+<br/>
 <img src="art/imock_login.png">
