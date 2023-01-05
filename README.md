@@ -6,3 +6,4 @@
 <div>-------> app.js</div>
 <div>-------> style.css</div>
 <div>-------> index.html</div>
+<img src="art/about_icon.png">
