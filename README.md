@@ -11,4 +11,6 @@
 <br/>
 <img src="art/imock_questions.png">
 <br/>
+<img src="art/imock_session.png">
+<br/>
 <img src="art/imock_login.png">
