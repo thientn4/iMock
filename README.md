@@ -1,5 +1,5 @@
 # iMock:
-<div>iMock is a web app to do mock interview by yourself</div>
+<div>iMock is a web app for students to do mock interview by themselves</div>
 <ul>
   <li>Web Speech API is utilized in JavaScript to support text-to-speech conversion functionality.</li>
   <li>Front-end interface is implemented with HTML, CSS, JavaScript, and integrated with Google Sign-in.</li>
