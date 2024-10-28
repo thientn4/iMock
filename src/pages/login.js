@@ -8,7 +8,7 @@ function Login() {
       //if(localStorage.getItem('email'))navigate("home")
     }, []);
     const login = async () => {
-
+        navigate("home")
     };
     const styles={
         screen:{
@@ -64,7 +64,7 @@ function Login() {
                 <div style={{width: 'fit-content', marginBottom:'0.5in'}}>
                     <div style={styles.bigWelcome}>Welcome to iMock</div>
                     <div style={styles.smallWelcome}>Let's start acing those interviews!</div>
-                    <img style={{width:'2in'}} src={require("../assets/login_btn.png")}/>
+                    <img style={{width:'2in'}} src={require("../assets/login_btn.png")} onClick={login}/>
                 </div>
             </div>
         </div>

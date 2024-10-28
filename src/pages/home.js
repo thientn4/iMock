@@ -1,0 +1,255 @@
+import React, { useEffect, useState } from "react";
+import axios from 'axios';
+import {useNavigate} from 'react-router-dom';
+
+function Home() {
+    const navigate=useNavigate();
+    const [questions,setQuestions]=useState([])
+    const [records,setRecords]=useState([])
+    useEffect(() => {
+        setQuestions([
+            {
+                question:"Tell me about the time when you worked for Power Settlement. Name some challenges you faced and how you handled them.",
+                origin:"Resume"
+            },
+            {
+                question:"Tell me about the time when you worked for Power Settlement. Name some challenges you faced and how you handled them.",
+                origin:"Resume"
+            },
+            {
+                question:"Tell me about the time when you worked for Power Settlement. Name some challenges you faced and how you handled them.",
+                origin:"Post"
+            },
+            {
+                question:"Tell me about the time when you worked for Power Settlement. Name some challenges you faced and how you handled them.",
+                origin:"Post"
+            },
+            {
+                question:"Tell me about the time when you worked for Power Settlement. Name some challenges you faced and how you handled them.",
+                origin:null
+            },
+            {
+                question:"Tell me about the time when you worked for Power Settlement.",
+                origin:null
+            },
+            {
+                question:"Tell me about the time when you worked for Power Settlement. Name some challenges you faced and how you handled them.",
+                origin:null
+            },
+            {
+                question:"Tell me about the time when you worked for Power Settlement. Name some challenges you faced and how you handled them.",
+                origin:null
+            }
+        ])
+        setRecords([
+            {
+                timestamp:"10/27/2024 - 10:30am",
+                expire:7,
+                time:3600,
+                questionCount:10
+            },
+            {
+                timestamp:"10/27/2024 - 10:30am",
+                expire:7,
+                time:60,
+                questionCount:10
+            },
+            {
+                timestamp:"10/27/2024 - 10:30am",
+                expire:7,
+                time:30,
+                questionCount:10
+            },
+            {
+                timestamp:"10/27/2024 - 10:30am",
+                expire:7,
+                time:62,
+                questionCount:10
+            },
+            {
+                timestamp:"10/27/2024 - 10:30am",
+                expire:7,
+                time:3602,
+                questionCount:10
+            },
+            {
+                timestamp:"10/27/2024 - 10:30am",
+                expire:7,
+                time:3660,
+                questionCount:10
+            },
+            {
+                timestamp:"10/27/2024 - 10:30am",
+                expire:7,
+                time:5420,
+                questionCount:10
+            }
+        ])
+    }, []);
+    const styles={
+        screen:{
+            width:'100vw',
+            height:'100svh',
+            display:'flex',
+            flexDirection:'row',
+            backgroundColor:'white',
+            fontSize:'0.2in'
+        },
+        recordHalf:{
+            width:'50vw',
+            height:'100%',
+            display:'flex',
+            flexDirection:'column',
+            backgroundColor:'rgb(102,153,255)'
+        },
+        questionsHalf:{
+            width:'50vw',
+            display:'flex',
+            flexDirection:'column'
+        },
+        header:{
+            height:'fit-content',
+            display:'flex',
+            flexDirection:'row',
+            padding:'0.1in'
+        },
+        inputBox:{
+            flexGrow:1,
+            marginRight:'0.1in',
+            borderRadius:'0.075in',
+            borderColor:'grey',
+            border:'solid thin grey',
+            paddingRight:'0.1in',
+            paddingLeft:'0.1in',
+            fontSize:'0.2in'
+        },
+        smallBtn:{
+            color:'white',
+            paddingLeft:'0.15in',
+            paddingRight:'0.15in',
+            borderRadius:'0.075in',
+            display:'flex',
+            flexDirection:'column',
+            justifyContent:'center',
+            userSelect:'none'
+        },
+        recordTitle:{
+            flexGrow:1,
+            color:'white',
+            display:'flex',
+            flexDirection:'column',
+            justifyContent:'center'
+        },
+        list:{
+            overflowY:'auto',
+            flexGrow:1
+        },
+        footer:{
+            height:'fit-content',
+            display:'flex',
+            flexDirection:'column',
+            marginTop:'0.1in'
+        },
+        footerRow:{
+            display:'flex',
+            flexDirection:'row',
+            padding:'0.1in',
+            paddingTop:0,
+            height:'0.4in'
+        },
+        bigBtn:{
+            color:'white',
+            paddingLeft:'0.15in',
+            paddingRight:'0.15in',
+            borderRadius:'0.075in',
+            display:'flex',
+            flexDirection:'column',
+            justifyContent:'center',
+            flexGrow:1,
+            userSelect:'none'
+        },
+        listItem:{
+            backgroundColor:'white',
+            display:'flex',
+            flexDirection:'row',
+            margin:'0.1in'
+        },
+        questionContent:{
+            flexGrow:1,
+            textAlign:'left',
+            padding:'0.1in'
+        },
+        deleteBtn:{
+            color:'white',
+            display:'flex',
+            flexDirection:'column',
+            justifyContent:'center',
+            padding:'0.1in',
+            fontSize:'0.2in',
+            userSelect:'none'
+        }
+    }
+    function fromSeconds(totalSeconds) {
+        const hours = Math.floor(totalSeconds / 3600);
+        const minutes = Math.floor((totalSeconds % 3600) / 60);
+        const seconds = totalSeconds % 60;
+        const hoursStr = hours===0?'':`${hours} hours `;
+        const minutesStr = minutes===0?'':`${minutes} minutes `;
+        const secondsStr = seconds===0?'':`${seconds} seconds`;
+      
+        return hoursStr+minutesStr+secondsStr;
+    }
+    return (
+      <div style={styles.screen}>
+        <div style={styles.questionsHalf}>
+            <div style={styles.header}>
+                <img style={{height:'0.4in',marginRight:'0.1in'}} src={require("../assets/logo.png")}/>
+                <input style={styles.inputBox} placeholder="search"/>
+                <div style={{...styles.smallBtn,backgroundColor:'rgb(255,124,128)'}}>Interview</div>
+            </div>
+            <div style={{...styles.list,backgroundColor:'rgb(211,211,211'}}>
+                {questions.map((item,index)=>(
+                    <div style={styles.listItem}>
+                        <div style={styles.questionContent}>{item.question}<b style={{paddingLeft:'0.15in',color:(item.origin==='Resume'?'rgb(102,153,255)':'rgb(255,124,128)')}}>{item.origin}</b></div>
+                        <div style={{...styles.deleteBtn,backgroundColor:'rgb(102,153,255)'}}>X</div>
+                    </div>
+                ))}
+            </div>
+            <div style={styles.footer}>
+                <div style={styles.footerRow}>
+                    <input style={styles.inputBox} placeholder="interview question"/>
+                    <div style={{...styles.smallBtn, color:'grey', border:'solid thin grey'}}>Add</div>
+                </div>
+                <div style={styles.footerRow}>
+                    <div style={{...styles.bigBtn,backgroundColor:'rgb(102,153,255)',marginRight:'0.05in'}}>Upload resume</div>
+                    <div style={{...styles.bigBtn,backgroundColor:'rgb(255,124,128)',marginLeft:'0.05in'}}>Upload post</div>
+                </div>
+            </div>
+        </div>
+        <div style={styles.recordHalf}>
+            <div style={styles.header}>
+                <img style={{height:'0.4in'}} src={require("../assets/cancel_btn.png")}/>
+                <div style={styles.recordTitle}>Your record</div>
+                <img style={{height:'0.4in'}} src={require("../assets/account_btn.png")}/>
+            </div>
+            <div style={{...styles.list,backgroundColor:'rgb(150,220,248'}}>
+                {records.map((item,index)=>(
+                    <div style={styles.listItem}>
+                        <div style={styles.questionContent}>
+                            <div style={{color:'rgb(102,153,255)'}}><b style={{paddingRight:'0.15in',color:'rgb(87,87,87)'}}>{item.timestamp}</b> {"Expire in "+item.expire+" days"}</div>
+                            <div style={{color:'dimgrey'}}>{fromSeconds(item.time)}</div>
+                            <div>{item.questionCount+" questions answered and reviewed"}</div>
+                        </div>
+                        <div style={{...styles.deleteBtn,backgroundColor:'rgb(255,124,128)'}}>X</div>
+                    </div>
+                ))}
+            </div>
+            <div style={{...styles.footer,color:'white',fontSize:'0.2in',margin:'0.1in'}}>
+                You can now store 2 interview sessions for free. Upgrade to premium for more storage!
+            </div>
+        </div>
+      </div>
+    );
+}
+
+export default Home;
