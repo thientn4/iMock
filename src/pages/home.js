@@ -206,7 +206,7 @@ function Home() {
             <div style={styles.header}>
                 <img style={{height:'0.4in',marginRight:'0.1in'}} src={require("../assets/logo.png")}/>
                 <input style={styles.inputBox} placeholder="search"/>
-                <div style={{...styles.smallBtn,backgroundColor:'rgb(255,124,128)'}}>Interview</div>
+                <div style={{...styles.smallBtn,backgroundColor:'rgb(255,124,128)'}}  onClick={()=>navigate("../countdown")}>Interview</div>
             </div>
             <div style={{...styles.list,backgroundColor:'rgb(211,211,211'}}>
                 {questions.map((item,index)=>(
