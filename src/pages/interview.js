@@ -88,13 +88,24 @@ function Interview() {
                 width:'100%'
             }}>
                 <img style={{height:'0.4in', paddingLeft:'0.2in'}} src={require("../assets/prev_btn.png")}/>
-                <div style={{...styles.btn, backgroundColor:'rgb(255,124,128)'}}>Replay</div>
+                <div style={{...styles.btn, backgroundColor:'rgb(255,124,128)'}} onClick={()=>{
+                    speechSynthesis.cancel();
+                    let voiceChoice=speechSynthesis.getVoices()[2]
+                    let cur_speech=new SpeechSynthesisUtterance(question);
+                    cur_speech.volume=1 //0 to 1
+                    cur_speech.rate=1.3 //0.1 to 10
+                    cur_speech.pitch=1.2 //0 to 2
+                    cur_speech.voice=voiceChoice
+                    cur_speech.lang="en-US"
+                    speechSynthesis.speak(cur_speech)
+                }}>Replay</div>
                 <div style={{...styles.btn, backgroundColor:'rgb(102,153,255)'}}>Answer</div>
                 <img style={{height:'0.4in', paddingRight:'0.2in'}} src={require("../assets/next_btn.png")}/>
             </div>
-            <div>
-                
-            </div>
+                <audio controls autoplay style={{width:'100%'}}>
+                    <source src={require("../assets/sample_audio.mp3")} type="audio/mpeg"/>
+                    Your browser does not support the audio element.
+                </audio>
         </div>
       </div>
     );
