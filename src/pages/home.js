@@ -44,7 +44,7 @@ function Home() {
         setRecords([
             {
                 timestamp:"10/27/2024 - 10:30am",
-                expire:7,
+                expire:1,
                 time:3600,
                 questionCount:10
             },
@@ -240,7 +240,7 @@ function Home() {
                 {records.map((item,index)=>(
                     <div style={styles.listItem}>
                         <div style={styles.questionContent}>
-                            <div style={{color:'rgb(102,153,255)'}}><b style={{paddingRight:'0.15in',color:'rgb(87,87,87)'}}>{item.timestamp}</b> {"Expire in "+item.expire+" days"}</div>
+                            <div style={{color:'rgb(102,153,255)'}}><b style={{paddingRight:'0.15in',color:'rgb(87,87,87)'}}>{item.timestamp}</b> {"Expire in "+item.expire+(item.expire<=1?" day":" days")}</div>
                             <div style={{color:'dimgrey'}}>{fromSeconds(item.time)}</div>
                             <div>{item.questionCount+" questions answered and reviewed"}</div>
                         </div>
@@ -249,7 +249,7 @@ function Home() {
                 ))}
             </div>
             <div style={{...styles.footer,color:'white',fontSize:'0.2in',margin:'0.1in'}}>
-                <div>You can now store 2 interview sessions for free. <u onClick={()=>navigate("../account")}>Upgrade to premium</u> for more storage!</div>
+                <div>You can now store 1 interview session for free. <u onClick={()=>navigate("../account")}>Upgrade to premium</u> for more storage!</div>
             </div>
         </div>
       </div>
