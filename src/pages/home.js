@@ -230,7 +230,7 @@ function Home() {
             <div style={styles.header}>
                 <img style={{height:'0.4in'}} src={require("../assets/cancel_btn.png")}/>
                 <div style={styles.recordTitle}>Your record</div>
-                <img style={{height:'0.4in'}} src={require("../assets/account_btn.png")}/>
+                <img style={{height:'0.4in'}} src={require("../assets/account_btn.png")} onClick={()=>navigate("../account")}/>
             </div>
             <div style={{...styles.list,backgroundColor:'rgb(150,220,248'}}>
                 {records.map((item,index)=>(
