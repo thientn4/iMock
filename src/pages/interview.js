@@ -4,7 +4,7 @@ import {useNavigate} from 'react-router-dom';
 
 function Interview() {
     const navigate=useNavigate();
-    const [second,setSecond]=useState(10)
+    const [speaking, setSpeaking]=useState(false)
     const [questions, setQuestions]=useState([])
     const [question, setQuestion]=useState("Tell me about the time when you worked for Power Settlement. Name some challenges you faced and how you handled them.")
     const [iter, setIter]=useState(0)
@@ -50,6 +50,22 @@ function Interview() {
             justifyContent:'center',
             fontSize:'0.2in',
             userSelect:'none',
+        },
+        audio:{
+            height:'2in',
+            width:'2in',
+            borderRadius:'1.5in',
+            borderStyle:'solid',
+            borderWidth:'thick',
+            borderColor:'rgb(255,124,128)',
+            color:'rgb(102,153,255)',
+            fontSize:'0.75in',
+            alignItems:'center',
+            display:'flex',
+            flexDirection:'column',
+            justifyContent:'center',
+            marginBottom:'0.5in',
+            position:'relative'
         }
     }
     return (
@@ -68,7 +84,10 @@ function Interview() {
             width:'fit-content'
         }}>
             <div>
-
+                <div style={styles.audio}>
+                    {speaking && <img style={{width:'1in'}} src={require("../assets/speaker.gif")}/>}
+                    {!speaking && <img style={{width:'1in'}} src={require("../assets/speaker.png")}/>}
+                </div>
             </div>
             <div style={{
                 fontSize:'0.2in',
@@ -97,6 +116,10 @@ function Interview() {
                     cur_speech.pitch=1.2 //0 to 2
                     cur_speech.voice=voiceChoice
                     cur_speech.lang="en-US"
+                    cur_speech.addEventListener("end",()=>{
+                        setSpeaking(false)
+                    })
+                    setSpeaking(true)
                     speechSynthesis.speak(cur_speech)
                 }}>Replay</div>
                 <div style={{...styles.btn, backgroundColor:'rgb(102,153,255)'}}>Answer</div>
