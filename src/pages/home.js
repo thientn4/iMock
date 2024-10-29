@@ -173,7 +173,8 @@ function Home() {
             backgroundColor:'white',
             display:'flex',
             flexDirection:'row',
-            margin:'0.1in'
+            margin:'0.1in',
+            borderRadius:'0.075in'
         },
         questionContent:{
             flexGrow:1,
@@ -187,7 +188,9 @@ function Home() {
             justifyContent:'center',
             padding:'0.1in',
             fontSize:'0.2in',
-            userSelect:'none'
+            userSelect:'none',
+            borderTopRightRadius:'0.075in',
+            borderBottomRightRadius:'0.075in'
         }
     }
     function fromSeconds(totalSeconds) {
