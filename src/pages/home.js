@@ -148,7 +148,8 @@ function Home() {
             height:'fit-content',
             display:'flex',
             flexDirection:'column',
-            marginTop:'0.1in'
+            marginTop:'0.1in',
+            userSelect:'none'
         },
         footerRow:{
             display:'flex',
@@ -245,7 +246,7 @@ function Home() {
                 ))}
             </div>
             <div style={{...styles.footer,color:'white',fontSize:'0.2in',margin:'0.1in'}}>
-                You can now store 2 interview sessions for free. Upgrade to premium for more storage!
+                <div>You can now store 2 interview sessions for free. <u onClick={()=>navigate("../account")}>Upgrade to premium</u> for more storage!</div>
             </div>
         </div>
       </div>
