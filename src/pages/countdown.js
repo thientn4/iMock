@@ -5,6 +5,7 @@ import {useNavigate} from 'react-router-dom';
 function Countdown() {
     const navigate=useNavigate();
     const [second,setSecond]=useState(10)
+    const [clicked, setClicked]=useState(false)
     const styles={
         screen:{
             width:'100vw',
@@ -32,25 +33,37 @@ function Countdown() {
             justifyContent:'center',
             fontSize:'0.2in',
             userSelect:'none',
-            backgroundColor:'rgb(255,124,128)'
+            backgroundColor:'rgb(255,124,128)',
+            marginTop:'0.5in',
+            opacity: clicked?'0.5':'1'
         },
         clock:{
-            height:'1.5in',
-            width:'1.5in',
+            height:'2in',
+            width:'2in',
             borderRadius:'1.5in',
             borderStyle:'solid',
             borderWidth:'thick',
-            borderColor:'rgb(102,153,255)',
+            //borderColor:'rgb(255,124,128)',
             color:'rgb(102,153,255)',
             fontSize:'0.75in',
             textAlign:'center',
             display:'flex',
             flexDirection:'column',
             justifyContent:'center',
-            marginBottom:'0.5in'
+            marginBottom:'0.5in',
+            position:'relative'
+        },
+        looper:{
+            height:'1.5in',
+            width:'1.5in',
+            position:'absolute',
+            left:'0.25in',
+            top:'0.25in'
         }
     }
     const countdown=async ()=>{
+        if(clicked)return
+        setClicked(true)
         for(let i=0; i<=11; i++)
             setTimeout(()=>{
                 if(second-i>=0)setSecond(second-i)
@@ -71,7 +84,10 @@ function Countdown() {
             alignItems:'center',
             flexGrow:1
         }}>
-            <div style={styles.clock}>{second}</div>
+            <div style={styles.clock}>
+                {clicked && <img style={styles.looper} src={require("../assets/loading.gif")}/>}
+                <div>{second}</div>
+            </div>
             <div style={styles.btn} onClick={countdown}>start</div>
         </div>
       </div>
