@@ -67,7 +67,7 @@ function Countdown() {
         for(let i=0; i<=11; i++)
             setTimeout(()=>{
                 if(second-i>=0)setSecond(second-i)
-                if(second-i===-1)navigate("../home")
+                if(second-i===-1)navigate("../interview")
             },1000*i)
     }
     return (
