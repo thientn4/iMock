@@ -4,6 +4,36 @@ import {useNavigate} from 'react-router-dom';
 
 function Interview() {
     const navigate=useNavigate();
+    /////////////////// TEXT TO SPEECH SETUP ////////////////////
+    let voiceChoice=speechSynthesis.getVoices()[2]
+    let cur_speech=new SpeechSynthesisUtterance();
+    cur_speech.volume=1 //0 to 1
+    cur_speech.rate=1.3 //0.1 to 10
+    cur_speech.pitch=1.2 //0 to 2
+    cur_speech.voice=voiceChoice
+    cur_speech.lang="en-US"
+    cur_speech.addEventListener("end",()=>{setSpeaking(false)})
+    cur_speech.addEventListener("start",()=>{setSpeaking(true)})
+    /////////////////// SPEECH TO TEXT SETUP ////////////////////
+    const recognition = new window.webkitSpeechRecognition();
+
+    recognition.lang = 'en-US';
+    recognition.onstart = () => {
+        //startButton.textContent = 'Listening...';
+        console.log("speech started")
+    };
+    
+    recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        //outputDiv.textContent = transcript;
+        console.log(transcript)
+    };
+    
+    recognition.onend = () => {
+        //startButton.textContent = 'Start Voice Input';
+        console.log("speech ended")
+    };
+    /////////////////////////////////////////////////////////////
     const [speaking, setSpeaking]=useState(false)
     const [audioPlaying, setAudioPlaying]=useState(false)
     const questions = [
@@ -13,21 +43,14 @@ function Interview() {
     ]
     const [iter, setIter]=useState(0)
     const [question, setQuestion]=useState(questions[iter])
+    const [mp3, setMp3]=useState(null)
     const stopSpeak=()=>{
         speechSynthesis.cancel();
     }
     const speak=(content)=>{
         if(audioPlaying)return
         speechSynthesis.cancel();
-        let voiceChoice=speechSynthesis.getVoices()[2]
-        let cur_speech=new SpeechSynthesisUtterance(content);
-        cur_speech.volume=1 //0 to 1
-        cur_speech.rate=1.3 //0.1 to 10
-        cur_speech.pitch=1.2 //0 to 2
-        cur_speech.voice=voiceChoice
-        cur_speech.lang="en-US"
-        cur_speech.addEventListener("end",()=>{setSpeaking(false)})
-        cur_speech.addEventListener("start",()=>{setSpeaking(true)})
+        cur_speech.text=content
         speechSynthesis.speak(cur_speech)
     }
     useEffect(() => {
@@ -171,12 +194,19 @@ function Interview() {
             </div>
             <div style={styles.btn} onClick={()=>{
                 if(speaking)return
+                if(audioPlaying){
+                    recognition.stop();
+                    setMp3(require("../assets/sample_audio.mp3"))
+                }
+                else recognition.start();
                 setAudioPlaying(!audioPlaying)
             }}>{audioPlaying?"Done":"Answer"}</div>
-            {/*<audio controls autoplay controlsList = "noplaybackrate nodownload" style={{width:'100%',opacity:(speaking?0.5:1),pointerEvents:(speaking?'none':'')}} id="audioPlayer" disabled={speaking}>
-                <source src={require("../assets/sample_audio.mp3")} type="audio/mpeg"/>
-                Your browser does not support the audio element.
-            </audio>*/}
+            <div style={{height:'0.5in',width:'100%'}}>
+                {mp3 && <audio controls autoplay controlsList = "noplaybackrate nodownload" style={{height:'0.5in',width:'100%',opacity:(speaking?0.5:1),pointerEvents:(speaking?'none':'')}} id="audioPlayer" disabled={speaking}>
+                    <source src={mp3} type="audio/mpeg"/>
+                    Your browser does not support the audio element.
+                </audio>}
+            </div>
         </div>
       </div>
     );
