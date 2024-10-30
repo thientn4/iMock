@@ -17,6 +17,7 @@ function Interview() {
         speechSynthesis.cancel();
     }
     const speak=(content)=>{
+        if(audioPlaying)return
         speechSynthesis.cancel();
         let voiceChoice=speechSynthesis.getVoices()[2]
         let cur_speech=new SpeechSynthesisUtterance(content);
@@ -58,7 +59,12 @@ function Interview() {
             width:'100%'
         },
         btn:{
+            margin:'0.2in',
+            borderRadius:'0.075in',
+            borderColor:'rgb(102,153,255)',
+            border:'solid',
             color:'white',
+            backgroundColor:'rgb(102,153,255)',
             padding:'0.05in',
             paddingLeft:'0.4in',
             paddingRight:'0.4in',
@@ -69,7 +75,8 @@ function Interview() {
             flexDirection:'column',
             justifyContent:'center',
             fontSize:'0.2in',
-            userSelect:'none'
+            userSelect:'none',
+            opacity:speaking?0.5:1
         },
         score:{
             borderRadius:'0.075in',
@@ -102,7 +109,7 @@ function Interview() {
             display:'flex',
             flexDirection:'column',
             justifyContent:'center',
-            marginBottom:'0.2in',
+            marginBottom:'0.5in',
             position:'relative'
         },
         nav:{
@@ -129,11 +136,15 @@ function Interview() {
         }}>
             <div>
                 <div style={styles.audio}>
-                    <img style={{width:'1in', display:(speaking?'':'none')}} src={require("../assets/speaker.png")} onClick={()=>{
+                    <img style={{width:'1in', display:((speaking && !audioPlaying)?'':'none')}} src={require("../assets/speaker.png")} onClick={()=>{
                         stopSpeak()
                         speak(question)
                     }}/>
-                    <img style={{width:'1in', display:(speaking?'none':'')}} src={require("../assets/play.png")} onClick={()=>{
+                    <img style={{width:'1in', display:((speaking || audioPlaying)?'none':'')}} src={require("../assets/play.png")} onClick={()=>{
+                        stopSpeak()
+                        speak(question)
+                    }}/>
+                    <img style={{width:'1in', display:(audioPlaying?'':'none')}} src={require("../assets/microphone.gif")} onClick={()=>{
                         stopSpeak()
                         speak(question)
                     }}/>
@@ -142,23 +153,27 @@ function Interview() {
             <div style={{
                 display:'flex',
                 flexDirection:'row',
-                padding:'0.2in',
                 justifyContent:'center',
-                width:'100%'
+                width:'100%',
+                opacity:(audioPlaying?0.25:1)
             }}>
-                <img style={{...styles.nav, opacity:(iter-1<0?0:1)}} src={require("../assets/prev_btn.png")} onClick={()=>{
-                    if(iter-1<0)return
+                <img style={{...styles.nav, opacity:((iter-1<0 && !audioPlaying)?0.25:1)}} src={require("../assets/prev_btn.png")} onClick={()=>{
+                    if(iter-1<0 || audioPlaying)return
                     setQuestion(questions[iter-1])
                     setIter(iter-1)
                 }}/>
                 <div style={styles.score}>{iter+1} / {questions.length}</div>
-                <img style={{...styles.nav, opacity:(iter+1>=questions.length?0:1)}} src={require("../assets/next_btn.png")}  onClick={()=>{
-                    if(iter+1>=questions.length)return
+                <img style={{...styles.nav, opacity:((iter+1>=questions.length && !audioPlaying)?0.25:1)}} src={require("../assets/next_btn.png")}  onClick={()=>{
+                    if(iter+1>=questions.length || audioPlaying)return
                     setQuestion(questions[iter+1])
                     setIter(iter+1)
                 }}/>
             </div>
-            {/*<audio controls autoplay style={{width:'100%',opacity:(speaking?0.5:1),pointerEvents:(speaking?'none':'')}} id="audioPlayer" disabled={speaking}>
+            <div style={styles.btn} onClick={()=>{
+                if(speaking)return
+                setAudioPlaying(!audioPlaying)
+            }}>{audioPlaying?"Done":"Answer"}</div>
+            {/*<audio controls autoplay controlsList = "noplaybackrate nodownload" style={{width:'100%',opacity:(speaking?0.5:1),pointerEvents:(speaking?'none':'')}} id="audioPlayer" disabled={speaking}>
                 <source src={require("../assets/sample_audio.mp3")} type="audio/mpeg"/>
                 Your browser does not support the audio element.
             </audio>*/}
