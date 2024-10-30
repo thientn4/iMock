@@ -15,23 +15,22 @@ function Login() {
             width:'100vw',
             height:'100svh',
             display:'flex',
-            flexDirection:'row',
-            backgroundColor:'white'
+            flexDirection:'column',
+            backgroundColor:'white',
         },
         login:{
-            flexGrow:1,
             display:'flex',
             flexDirection:'column',
             textAlign:'left',
             justifyContent:'center',
             alignItems:'center'
         },
-        art:{
-            width:'50vw',
+        nonLogo:{
+            width:'100%',
             height:'100%',
             display:'flex',
-            flexDirection:'column',
-            justifyContent:'center'
+            flexDirection:'row',
+            justifyContent:'space-around'
         },
         logo:{
             display:'flex',
@@ -58,19 +57,19 @@ function Login() {
     }
     return (
       <div style={styles.screen}>
-        <div style={styles.nonArt}>
             <div style={styles.logo}><img style={{height:'0.7in'}} src={require("../assets/horizontal_logo.png")}/></div>
-            <div style={styles.login}>
-                <div style={{width: 'fit-content', marginBottom:'0.5in'}}>
-                    <div style={styles.bigWelcome}>Welcome to iMock</div>
-                    <div style={styles.smallWelcome}>Let's start acing those interviews!</div>
-                    <img style={{width:'2in'}} src={require("../assets/login_btn.png")} onClick={login}/>
+            <div style={styles.nonLogo}>
+                <div style={styles.login}>
+                    <div style={{width: 'fit-content'}}>
+                        <div style={styles.bigWelcome}>Welcome to iMock</div>
+                        <div style={styles.smallWelcome}>Let's start acing those interviews!</div>
+                        <img style={{width:'2in'}} src={require("../assets/login_btn.png")} onClick={login}/>
+                    </div>
+                </div>
+                <div style={styles.login}>
+                    <img style={{width:'38vw'}} src={require("../assets/login_art.jpg")}/>
                 </div>
             </div>
-        </div>
-        <div style={styles.art}>
-            <img style={{width:'75%'}} src={require("../assets/login_art.jpg")}/>
-        </div>
       </div>
     );
 }
