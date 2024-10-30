@@ -5,12 +5,10 @@ import {useNavigate} from 'react-router-dom';
 function Interview() {
     const navigate=useNavigate();
     /////////////////// TEXT TO SPEECH SETUP ////////////////////
-    let voiceChoice=speechSynthesis.getVoices()[2]
     let cur_speech=new SpeechSynthesisUtterance();
     cur_speech.volume=1 //0 to 1
     cur_speech.rate=1.3 //0.1 to 10
     cur_speech.pitch=1.2 //0 to 2
-    cur_speech.voice=voiceChoice
     cur_speech.lang="en-US"
     cur_speech.addEventListener("end",()=>{setSpeaking(false)})
     cur_speech.addEventListener("start",()=>{setSpeaking(true)})
@@ -19,23 +17,21 @@ function Interview() {
 
     recognition.lang = 'en-US';
     recognition.onstart = () => {
-        //startButton.textContent = 'Listening...';
         console.log("speech started")
     };
     
     recognition.onresult = (event) => {
         const transcript = event.results[0][0].transcript;
-        //outputDiv.textContent = transcript;
         console.log(transcript)
     };
     
     recognition.onend = () => {
-        //startButton.textContent = 'Start Voice Input';
         console.log("speech ended")
     };
     /////////////////////////////////////////////////////////////
     const [speaking, setSpeaking]=useState(false)
     const [audioPlaying, setAudioPlaying]=useState(false)
+    const [recording, setRecording]=useState(false)
     const questions = [
         "Can you introduce yourself?",
         "Tell me about the time when you worked for Power Settlement. Name some challenges you faced and how you handled them.",
@@ -48,7 +44,7 @@ function Interview() {
         speechSynthesis.cancel();
     }
     const speak=(content)=>{
-        if(audioPlaying)return
+        if(recording)return
         speechSynthesis.cancel();
         cur_speech.text=content
         speechSynthesis.speak(cur_speech)
@@ -84,13 +80,10 @@ function Interview() {
         btn:{
             margin:'0.2in',
             borderRadius:'0.075in',
-            borderColor:'rgb(102,153,255)',
-            border:'solid',
             color:'white',
             backgroundColor:'rgb(102,153,255)',
-            padding:'0.05in',
-            paddingLeft:'0.4in',
-            paddingRight:'0.4in',
+            paddingTop:'0.05in',
+            paddingBottom:'0.05in',
             marginRight:'0.2in',
             marginLeft:'0.2in',
             borderRadius:'0.075in',
@@ -99,7 +92,8 @@ function Interview() {
             justifyContent:'center',
             fontSize:'0.2in',
             userSelect:'none',
-            opacity:speaking?0.5:1
+            opacity:speaking?0.5:1,
+            width:'100%'
         },
         score:{
             borderRadius:'0.075in',
@@ -133,7 +127,7 @@ function Interview() {
             flexDirection:'column',
             justifyContent:'center',
             marginBottom:'0.5in',
-            position:'relative'
+            position:'relative',
         },
         nav:{
             borderRadius:'100%',
@@ -157,52 +151,50 @@ function Interview() {
             flexGrow:1,
             width:'fit-content'
         }}>
-            <div>
-                <div style={styles.audio}>
-                    <img style={{width:'1in', display:((speaking && !audioPlaying)?'':'none')}} src={require("../assets/speaker.png")} onClick={()=>{
-                        stopSpeak()
-                        speak(question)
-                    }}/>
-                    <img style={{width:'1in', display:((speaking || audioPlaying)?'none':'')}} src={require("../assets/play.png")} onClick={()=>{
-                        stopSpeak()
-                        speak(question)
-                    }}/>
-                    <img style={{width:'1in', display:(audioPlaying?'':'none')}} src={require("../assets/microphone.gif")} onClick={()=>{
-                        stopSpeak()
-                        speak(question)
-                    }}/>
-                </div>
+            <div style={styles.audio}>
+                <img style={{width:'1in', display:((speaking && !recording)?'':'none')}} src={require("../assets/speaker.png")}/>
+                <img style={{width:'1in', display:((speaking || recording)?'none':'')}} src={require("../assets/play.png")} onClick={()=>{
+                    stopSpeak()
+                    speak(question)
+                }}/>
+                <img style={{width:'1in', display:(recording?'':'none')}} src={require("../assets/microphone.gif")}/>
             </div>
             <div style={{
                 display:'flex',
                 flexDirection:'row',
                 justifyContent:'center',
                 width:'100%',
-                opacity:(audioPlaying?0.25:1)
+                opacity:(recording?0.25:1)
             }}>
-                <img style={{...styles.nav, opacity:((iter-1<0 && !audioPlaying)?0.25:1)}} src={require("../assets/prev_btn.png")} onClick={()=>{
-                    if(iter-1<0 || audioPlaying)return
+                <img style={{...styles.nav, opacity:((iter-1<0 && !recording)?0.25:1)}} src={require("../assets/prev_btn.png")} onClick={()=>{
+                    if(iter-1<0 || recording)return
                     setQuestion(questions[iter-1])
                     setIter(iter-1)
                 }}/>
                 <div style={styles.score}>{iter+1} / {questions.length}</div>
-                <img style={{...styles.nav, opacity:((iter+1>=questions.length && !audioPlaying)?0.25:1)}} src={require("../assets/next_btn.png")}  onClick={()=>{
-                    if(iter+1>=questions.length || audioPlaying)return
+                <img style={{...styles.nav, opacity:((iter+1>=questions.length && !recording)?0.25:1)}} src={require("../assets/next_btn.png")}  onClick={()=>{
+                    if(iter+1>=questions.length || recording)return
                     setQuestion(questions[iter+1])
                     setIter(iter+1)
                 }}/>
             </div>
             <div style={styles.btn} onClick={()=>{
                 if(speaking)return
-                if(audioPlaying){
+                if(recording){
                     recognition.stop();
                     setMp3(require("../assets/sample_audio.mp3"))
                 }
-                else recognition.start();
-                setAudioPlaying(!audioPlaying)
-            }}>{audioPlaying?"Done":"Answer"}</div>
+                else{
+                    if(mp3){
+                        if(window.confirm("Are you sure you want to delete and answer again?"))setMp3(null)
+                        else return
+                    }
+                    recognition.start();
+                }
+                setRecording(!recording)
+            }}>{recording?"Done":"Answer"}</div>
             <div style={{height:'0.5in',width:'100%'}}>
-                {mp3 && <audio controls autoplay controlsList = "noplaybackrate nodownload" style={{height:'0.5in',width:'100%',opacity:(speaking?0.5:1),pointerEvents:(speaking?'none':'')}} id="audioPlayer" disabled={speaking}>
+                {mp3  && <audio controls autoplay controlsList = "noplaybackrate nodownload" style={{height:'0.5in',width:'100%',opacity:(speaking?0.5:1),pointerEvents:((speaking || recording)?'none':'')}} id="audioPlayer" disabled={speaking}>
                     <source src={mp3} type="audio/mpeg"/>
                     Your browser does not support the audio element.
                 </audio>}
