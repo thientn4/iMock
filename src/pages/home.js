@@ -95,14 +95,7 @@ function Home() {
             backgroundColor:'white',
             fontSize:'0.2in'
         },
-        recordHalf:{
-            width:'50vw',
-            height:'100%',
-            display:'flex',
-            flexDirection:'column',
-            backgroundColor:'rgb(102,153,255)'
-        },
-        questionsHalf:{
+        half:{
             width:'50vw',
             display:'flex',
             flexDirection:'column'
@@ -205,7 +198,7 @@ function Home() {
     }
     return (
       <div style={styles.screen}>
-        <div style={styles.questionsHalf}>
+        <div style={styles.half}>
             <div style={styles.header}>
                 <img style={{height:'0.4in',marginRight:'0.1in'}} src={require("../assets/logo.png")}/>
                 <input style={styles.inputBox} placeholder="search"/>
@@ -230,7 +223,7 @@ function Home() {
                 </div>
             </div>
         </div>
-        <div style={styles.recordHalf}>
+        <div style={{...styles.half, backgroundColor:'rgb(102,153,255)'}}>
             <div style={styles.header}>
                 <img style={{height:'0.4in'}} src={require("../assets/cancel_btn.png")}/>
                 <div style={styles.recordTitle}>Your record</div>
