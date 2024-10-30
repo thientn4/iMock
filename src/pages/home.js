@@ -202,7 +202,7 @@ function Home() {
             <div style={styles.header}>
                 <img style={{height:'0.4in',marginRight:'0.1in'}} src={require("../assets/logo.png")}/>
                 <input style={styles.inputBox} placeholder="search"/>
-                <div style={{...styles.smallBtn,backgroundColor:'rgb(255,124,128)'}}  onClick={()=>navigate("../countdown")}>Interview</div>
+                <div style={{...styles.smallBtn,backgroundColor:'rgb(255,124,128)'}}  onClick={()=>navigate("../countdown")}>Practice</div>
             </div>
             <div style={{...styles.list,backgroundColor:'rgb(211,211,211'}}>
                 {questions.map((item,index)=>(
@@ -215,7 +215,7 @@ function Home() {
             <div style={styles.footer}>
                 <div style={styles.footerRow}>
                     <input style={styles.inputBox} placeholder="interview question"/>
-                    <div style={{...styles.smallBtn, color:'grey', border:'solid thin grey'}}>Add</div>
+                    <div style={{...styles.smallBtn, color:'grey', border:'solid thin grey'}}>Add </div>
                 </div>
                 <div style={styles.footerRow}>
                     <div style={{...styles.bigBtn,backgroundColor:'rgb(102,153,255)',marginRight:'0.05in'}}>Upload resume</div>
