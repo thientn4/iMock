@@ -44,18 +44,11 @@ function Interview() {
         speechSynthesis.cancel();
     }
     const speak=(content)=>{
-        if(recording)return
+        if(recording || audioPlaying)return
         speechSynthesis.cancel();
         cur_speech.text=content
         speechSynthesis.speak(cur_speech)
     }
-    useEffect(() => {
-        let audio = document.getElementById("audioPlayer");
-        if(!audio)return
-        audio.onplay = function() {setAudioPlaying(true)};
-        audio.onended = function() {setAudioPlaying(false)};
-        audio.onpause = function() {setAudioPlaying(false)};
-    },[])
     useEffect(() => {
         stopSpeak()
         speak(question)
@@ -93,7 +86,8 @@ function Interview() {
             fontSize:'0.2in',
             userSelect:'none',
             opacity:speaking?0.5:1,
-            width:'100%'
+            width:'100%',
+            opacity:(speaking || audioPlaying)?0.25:1
         },
         score:{
             borderRadius:'0.075in',
@@ -128,6 +122,7 @@ function Interview() {
             justifyContent:'center',
             marginBottom:'0.5in',
             position:'relative',
+            opacity:audioPlaying?0.25:1
         },
         nav:{
             borderRadius:'100%',
@@ -164,22 +159,22 @@ function Interview() {
                 flexDirection:'row',
                 justifyContent:'center',
                 width:'100%',
-                opacity:(recording?0.25:1)
+                opacity:((recording || audioPlaying)?0.25:1)
             }}>
-                <img style={{...styles.nav, opacity:((iter-1<0 && !recording)?0.25:1)}} src={require("../assets/prev_btn.png")} onClick={()=>{
-                    if(iter-1<0 || recording)return
+                <img style={{...styles.nav, opacity:((iter-1<0 && !recording && !audioPlaying)?0.25:1)}} src={require("../assets/prev_btn.png")} onClick={()=>{
+                    if(iter-1<0 || recording || audioPlaying)return
                     setQuestion(questions[iter-1])
                     setIter(iter-1)
                 }}/>
                 <div style={styles.score}>{iter+1} / {questions.length}</div>
-                <img style={{...styles.nav, opacity:((iter+1>=questions.length && !recording)?0.25:1)}} src={require("../assets/next_btn.png")}  onClick={()=>{
-                    if(iter+1>=questions.length || recording)return
+                <img style={{...styles.nav, opacity:((iter+1>=questions.length && !recording && !audioPlaying)?0.25:1)}} src={require("../assets/next_btn.png")}  onClick={()=>{
+                    if(iter+1>=questions.length || recording || audioPlaying)return
                     setQuestion(questions[iter+1])
                     setIter(iter+1)
                 }}/>
             </div>
             <div style={styles.btn} onClick={()=>{
-                if(speaking)return
+                if(speaking || audioPlaying)return
                 if(recording){
                     recognition.stop();
                     setMp3(require("../assets/sample_audio.mp3"))
@@ -194,7 +189,16 @@ function Interview() {
                 setRecording(!recording)
             }}>{recording?"Done":"Answer"}</div>
             <div style={{height:'0.5in',width:'100%'}}>
-                {mp3  && <audio controls autoplay controlsList = "noplaybackrate nodownload" style={{height:'0.5in',width:'100%',opacity:(speaking?0.5:1),pointerEvents:((speaking || recording)?'none':'')}} id="audioPlayer" disabled={speaking}>
+                {mp3  && <audio 
+                    controls 
+                    controlsList = "noplaybackrate nodownload" 
+                    style={{height:'0.5in',width:'100%',opacity:(speaking?0.5:1),pointerEvents:((speaking || recording)?'none':'')}} 
+                    id="audioPlayer" 
+                    disabled={speaking}
+                    onPlay={()=>{setAudioPlaying(true)}}
+                    onPause={()=>{setAudioPlaying(false)}}
+                    onEnd={()=>{setAudioPlaying(false)}}
+                >
                     <source src={mp3} type="audio/mpeg"/>
                     Your browser does not support the audio element.
                 </audio>}

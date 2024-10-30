@@ -206,7 +206,7 @@ function Home() {
             </div>
             <div style={{...styles.list,backgroundColor:'rgb(211,211,211'}}>
                 {questions.map((item,index)=>(
-                    <div style={styles.listItem}>
+                    <div style={styles.listItem} key={index}>
                         <div style={styles.questionContent}>{item.question}<b style={{paddingLeft:'0.15in',color:(item.origin==='Resume'?'rgb(102,153,255)':'rgb(255,124,128)')}}>{item.origin}</b></div>
                         <div style={{...styles.deleteBtn,backgroundColor:'rgb(102,153,255)'}}>X</div>
                     </div>
@@ -231,7 +231,7 @@ function Home() {
             </div>
             <div style={{...styles.list,backgroundColor:'rgb(150,220,248'}}>
                 {records.map((item,index)=>(
-                    <div style={styles.listItem}>
+                    <div style={styles.listItem} key={index}>
                         <div style={styles.questionContent}>
                             <div style={{color:'rgb(102,153,255)'}}><b style={{paddingRight:'0.15in',color:'rgb(87,87,87)'}}>{item.timestamp}</b> {"Expire in "+item.expire+(item.expire<=1?" day":" days")}</div>
                             <div style={{color:'dimgrey'}}>{fromSeconds(item.time)}</div>
