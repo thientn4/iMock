@@ -27,7 +27,6 @@ function Interview() {
 
     const [speaking, setSpeaking]=useState(false)
     const [audioPlaying, setAudioPlaying]=useState(false)
-    const [recording, setRecording]=useState(false)
     const questions = [
         "Can you introduce yourself?",
         "Tell me about the time when you worked for Power Settlement. Name some challenges you faced and how you handled them.",
@@ -40,7 +39,7 @@ function Interview() {
         speechSynthesis.cancel();
     }
     const speak=(content)=>{
-        if(recording || audioPlaying)return
+        if(listening || audioPlaying)return
         speechSynthesis.cancel();
         cur_speech.text=content
         speechSynthesis.speak(cur_speech)
@@ -143,35 +142,35 @@ function Interview() {
             width:'fit-content'
         }}>
             <div style={styles.audio}>
-                <img style={{width:'1in', display:((speaking && !recording)?'':'none')}} src={require("../assets/speaker.png")}/>
-                <img style={{width:'1in', display:((speaking || recording)?'none':'')}} src={require("../assets/play.png")} onClick={()=>{
+                <img style={{width:'1in', display:((speaking && !listening)?'':'none')}} src={require("../assets/speaker.png")}/>
+                <img style={{width:'1in', display:((speaking || listening)?'none':'')}} src={require("../assets/play.png")} onClick={()=>{
                     stopSpeak()
                     speak(question)
                 }}/>
-                <img style={{width:'1in', display:(recording?'':'none')}} src={require("../assets/microphone.gif")}/>
+                <img style={{width:'1in', display:(listening?'':'none')}} src={require("../assets/microphone.gif")}/>
             </div>
             <div style={{
                 display:'flex',
                 flexDirection:'row',
                 justifyContent:'center',
                 width:'100%',
-                opacity:((recording || audioPlaying)?0.25:1)
+                opacity:((listening || audioPlaying)?0.25:1)
             }}>
-                <img style={{...styles.nav, opacity:((iter-1<0 && !recording && !audioPlaying)?0.25:1)}} src={require("../assets/prev_btn.png")} onClick={()=>{
-                    if(iter-1<0 || recording || audioPlaying)return
+                <img style={{...styles.nav, opacity:((iter-1<0 && !listening && !audioPlaying)?0.25:1)}} src={require("../assets/prev_btn.png")} onClick={()=>{
+                    if(iter-1<0 || listening || audioPlaying)return
                     setQuestion(questions[iter-1])
                     setIter(iter-1)
                 }}/>
                 <div style={styles.score}>{iter+1} / {questions.length}</div>
-                <img style={{...styles.nav, opacity:((iter+1>=questions.length && !recording && !audioPlaying)?0.25:1)}} src={require("../assets/next_btn.png")}  onClick={()=>{
-                    if(iter+1>=questions.length || recording || audioPlaying)return
+                <img style={{...styles.nav, opacity:((iter+1>=questions.length && !listening && !audioPlaying)?0.25:1)}} src={require("../assets/next_btn.png")}  onClick={()=>{
+                    if(iter+1>=questions.length || listening || audioPlaying)return
                     setQuestion(questions[iter+1])
                     setIter(iter+1)
                 }}/>
             </div>
             <div style={styles.btn} onClick={()=>{
                 if(speaking || audioPlaying)return
-                if(recording){
+                if(listening){
                     SpeechRecognition.stopListening();
                     setMp3(require("../assets/sample_audio.mp3"))
                     console.log(transcript)
@@ -194,13 +193,12 @@ function Interview() {
                     }
                     SpeechRecognition.startListening({ continuous: true });
                 }
-                setRecording(!recording)
-            }}>{recording?"Done":"Answer"}</div>
+            }}>{listening?"Done":"Answer"}</div>
             <div style={{height:'0.5in',width:'100%'}}>
                 {mp3  && <audio 
                     controls 
                     controlsList = "noplaybackrate nodownload" 
-                    style={{height:'0.5in',width:'100%',opacity:(speaking?0.5:1),pointerEvents:((speaking || recording)?'none':'')}} 
+                    style={{height:'0.5in',width:'100%',opacity:(speaking?0.5:1),pointerEvents:((speaking || listening)?'none':'')}} 
                     id="audioPlayer" 
                     disabled={speaking}
                     onPlay={()=>{setAudioPlaying(true)}}
