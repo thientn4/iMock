@@ -234,7 +234,7 @@ function Home() {
     return (
       <div style={styles.screen}>
         {windowWidth<700 && <div style={{...styles.header, backgroundColor:'rgb(211,211,211)'}}>
-            <select style={styles.selectBox} onChange={(event)=>{setPageType(event.target.value)}}>
+            <select style={styles.selectBox} value={pageType} onChange={(event)=>{setPageType(event.target.value)}}>
                 <option>Questions</option>
                 <option>Records</option>
             </select>
