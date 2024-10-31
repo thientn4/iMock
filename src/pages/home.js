@@ -285,7 +285,7 @@ function Home() {
                     ))}
                 </div>
                 <div style={{...styles.footer,color:'white',margin:'0.1in'}}>
-                    <div>You can now store 1 interview session for free. <u onClick={()=>navigate("../account")}>Upgrade to premium</u> for more storage!</div>
+                    <div>You can now store 1 interview session for free. <u onClick={()=>navigate("../account")}>Upgrade to premium</u> for more storage! 👊</div>
                 </div>
             </div>}
         </div>
