@@ -35,9 +35,6 @@ function Interview() {
     const [iter, setIter]=useState(0)
     const [question, setQuestion]=useState(questions[iter])
     const [mp3, setMp3]=useState(null)
-    const stopSpeak=()=>{
-        speechSynthesis.cancel();
-    }
     const speak=(content)=>{
         if(listening || audioPlaying)return
         speechSynthesis.cancel();
@@ -45,7 +42,6 @@ function Interview() {
         speechSynthesis.speak(cur_speech)
     }
     useEffect(() => {
-        stopSpeak()
         speak(question)
     },[question])
     const styles={
@@ -129,7 +125,7 @@ function Interview() {
     return (
       <div style={styles.screen}>
         <div style={styles.header}>
-            <img style={{height:'0.4in',margin:'0.1in'}} src={require("../assets/cancel_btn.png")} onClick={()=>{stopSpeak();navigate("../home");}}/>
+            <img style={{height:'0.4in',margin:'0.1in'}} src={require("../assets/cancel_btn.png")} onClick={()=>{speechSynthesis.cancel();navigate("../home");}}/>
             <img style={{height:'0.4in',margin:'0.1in'}} src={require("../assets/horizontal_logo_mono.png")}/>
             <div style={{width:'0.4in'}}></div>
         </div>
@@ -144,7 +140,6 @@ function Interview() {
             <div style={styles.audio}>
                 <img style={{width:'1in', display:((speaking && !listening)?'':'none')}} src={require("../assets/speaker.png")}/>
                 <img style={{width:'1in', display:((speaking || listening)?'none':'')}} src={require("../assets/play.png")} onClick={()=>{
-                    stopSpeak()
                     speak(question)
                 }}/>
                 <img style={{width:'1in', display:(listening?'':'none')}} src={require("../assets/microphone.gif")}/>
