@@ -261,7 +261,7 @@ function Home() {
                     </div>
                     <div style={styles.footerRow}>
                         <div style={{...styles.bigBtn,backgroundColor:'rgb(102,153,255)',marginRight:'0.05in'}}>Upload resume</div>
-                        <div style={{...styles.bigBtn,backgroundColor:'rgb(255,124,128)',marginLeft:'0.05in'}}>Upload post</div>
+                        <div style={{...styles.bigBtn,backgroundColor:'rgb(255,124,128)',marginLeft:'0.05in'}}>Upload job post</div>
                     </div>
                 </div>
             </div>}
