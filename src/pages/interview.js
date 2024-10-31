@@ -9,6 +9,7 @@ import play from"../assets/play.png"
 import microphone from"../assets/microphone.gif"
 import prev_btn from"../assets/prev_btn.png"
 import next_btn from"../assets/next_btn.png"
+import submit_btn from"../assets/submit_btn.png"
 
 function Interview() {
     const navigate=useNavigate();
@@ -39,6 +40,7 @@ function Interview() {
         "Tell me about the time when you worked for Power Settlement. Name some challenges you faced and how you handled them.",
         "How do you handle stress?"
     ]
+    const answers=new Array(questions.length).fill(null)
     const [iter, setIter]=useState(0)
     const [question, setQuestion]=useState(questions[iter])
     const [mp3, setMp3]=useState(null)
@@ -164,8 +166,16 @@ function Interview() {
                     setIter(iter-1)
                 }}/>
                 <div style={styles.score}>{iter+1} / {questions.length}</div>
-                <img style={{...styles.nav, opacity:((iter+1>=questions.length && !listening && !audioPlaying)?0.25:1)}} src={next_btn}  onClick={()=>{
-                    if(iter+1>=questions.length || listening || audioPlaying)return
+                <img style={{...styles.nav}} src={iter+1>=questions.length?submit_btn:next_btn}  onClick={()=>{
+                    if(listening || audioPlaying)return
+                    if(iter+1>=questions.length){
+                        setSpeaking(false)
+                        speechSynthesis.cancel()
+                        if(window.confirm("You want to end and submit for review?")){
+                            navigate('../home')
+                        }
+                        return
+                    }
                     setQuestion(questions[iter+1])
                     setIter(iter+1)
                 }}/>
@@ -176,6 +186,7 @@ function Interview() {
                     SpeechRecognition.stopListening();
                     setMp3(require("../assets/sample_audio.mp3"))
                     console.log(transcript)
+                    answers[iter]=transcript
                 }
                 else{
                     if (!browserSupportsSpeechRecognition ) {
