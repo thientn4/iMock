@@ -109,7 +109,7 @@ function Home() {
             display:'flex',
             flexDirection:'column',
             backgroundColor:'white',
-            fontSize:'0.2in',
+            fontSize:'0.17in',
             position:'relative',
         },
         selectBox:{
@@ -168,6 +168,7 @@ function Home() {
             justifyContent:'center'
         },
         list:{
+            fontSize:'0.16in',
             overflowY:'auto',
             flexGrow:1
         },
@@ -283,7 +284,7 @@ function Home() {
                         </div>
                     ))}
                 </div>
-                <div style={{...styles.footer,color:'white',fontSize:'0.2in',margin:'0.1in'}}>
+                <div style={{...styles.footer,color:'white',margin:'0.1in'}}>
                     <div>You can now store 1 interview session for free. <u onClick={()=>navigate("../account")}>Upgrade to premium</u> for more storage!</div>
                 </div>
             </div>}
