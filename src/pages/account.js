@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import axios from 'axios';
 import {useNavigate} from 'react-router-dom';
+import vertical_logo from "../assets/vertical_logo.png"
+import cancel_blue_btn from "../assets/cancel_blue_btn.png"
 
 function Account() {
     const navigate=useNavigate();
@@ -41,13 +43,13 @@ function Account() {
     return (
       <div style={styles.screen}>
         <div style={styles.container}>
-            <img style={{width:'1.4in',paddingBottom:'0.25in'}} src={require("../assets/vertical_logo.png")}/>
+            <img style={{width:'1.4in',paddingBottom:'0.25in'}} src={vertical_logo}/>
             <b>ntmthien01@gmail.com</b>
             <b style={{color:'rgb(102,153,255)'}}>free plan</b>
             <div style={{...styles.btn,backgroundColor:'rgb(102,153,255)',marginTop:'0.4in',marginBottom:'0.1in'}} onClick={()=>navigate("../")}>sign out</div>
             <div style={{...styles.btn,backgroundColor:'rgb(255,124,128)',marginBottom:'0.25in'}}>premium upgrade</div>
             <u style={{color:'rgb(102,153,255)'}}>what is in premium?</u>
-            <img style={{width:'0.5in',paddingTop:'0.45in'}} src={require("../assets/cancel_blue_btn.png")}  onClick={()=>navigate("../home")}/>
+            <img style={{width:'0.5in',paddingTop:'0.45in'}} src={cancel_blue_btn}  onClick={()=>navigate("../home")}/>
         </div>
       </div>
     );

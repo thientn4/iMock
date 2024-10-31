@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import axios from 'axios';
 import {useNavigate} from 'react-router-dom';
+import cancel_btn from"../assets/cancel_btn.png"
+import horizontal_logo_mono from"../assets/horizontal_logo_mono.png"
+import loading from"../assets/loading.gif"
 
 function Countdown() {
     const navigate=useNavigate();
@@ -73,8 +76,8 @@ function Countdown() {
     return (
       <div style={styles.screen}>
         <div style={styles.header}>
-            <img style={{height:'0.4in',marginRight:'0.1in'}} src={require("../assets/cancel_btn.png")} onClick={()=>navigate("../home")}/>
-            <img style={{height:'0.4in',marginRight:'0.1in'}} src={require("../assets/horizontal_logo_mono.png")}/>
+            <img style={{height:'0.4in',marginRight:'0.1in'}} src={cancel_btn} onClick={()=>navigate("../home")}/>
+            <img style={{height:'0.4in',marginRight:'0.1in'}} src={horizontal_logo_mono}/>
             <div style={{width:'0.4in'}}></div>
         </div>
         <div style={{
@@ -85,7 +88,7 @@ function Countdown() {
             flexGrow:1
         }}>
             <div style={styles.clock}>
-                {clicked && <img style={styles.looper} src={require("../assets/loading.gif")}/>}
+                {clicked && <img style={styles.looper} src={loading}/>}
                 <div>{second}</div>
             </div>
             <div style={styles.btn} onClick={countdown}>start</div>

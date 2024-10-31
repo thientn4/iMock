@@ -2,6 +2,13 @@ import React, { useState, useEffect } from "react";
 import axios from 'axios';
 import {useNavigate} from 'react-router-dom';
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition'
+import cancel_btn from"../assets/cancel_btn.png"
+import horizontal_logo_mono from"../assets/horizontal_logo_mono.png"
+import speaker from"../assets/speaker.png"
+import play from"../assets/play.png"
+import microphone from"../assets/microphone.gif"
+import prev_btn from"../assets/prev_btn.png"
+import next_btn from"../assets/next_btn.png"
 
 function Interview() {
     const navigate=useNavigate();
@@ -125,8 +132,8 @@ function Interview() {
     return (
       <div style={styles.screen}>
         <div style={styles.header}>
-            <img style={{height:'0.4in',margin:'0.1in'}} src={require("../assets/cancel_btn.png")} onClick={()=>{speechSynthesis.cancel();navigate("../home");}}/>
-            <img style={{height:'0.4in',margin:'0.1in'}} src={require("../assets/horizontal_logo_mono.png")}/>
+            <img style={{height:'0.4in',margin:'0.1in'}} src={cancel_btn} onClick={()=>{speechSynthesis.cancel();navigate("../home");}}/>
+            <img style={{height:'0.4in',margin:'0.1in'}} src={horizontal_logo_mono}/>
             <div style={{width:'0.4in'}}></div>
         </div>
         <div style={{
@@ -138,11 +145,11 @@ function Interview() {
             width:'fit-content'
         }}>
             <div style={styles.audio}>
-                <img style={{width:'1in', display:((speaking && !listening)?'':'none')}} src={require("../assets/speaker.png")}/>
-                <img style={{width:'1in', display:((speaking || listening)?'none':'')}} src={require("../assets/play.png")} onClick={()=>{
+                <img style={{width:'1in', display:((speaking && !listening)?'':'none')}} src={speaker}/>
+                <img style={{width:'1in', display:((speaking || listening)?'none':'')}} src={play} onClick={()=>{
                     speak(question)
                 }}/>
-                <img style={{width:'1in', display:(listening?'':'none')}} src={require("../assets/microphone.gif")}/>
+                <img style={{width:'1in', display:(listening?'':'none')}} src={microphone}/>
             </div>
             <div style={{
                 display:'flex',
@@ -151,13 +158,13 @@ function Interview() {
                 width:'100%',
                 opacity:((listening || audioPlaying)?0.25:1)
             }}>
-                <img style={{...styles.nav, opacity:((iter-1<0 && !listening && !audioPlaying)?0.25:1)}} src={require("../assets/prev_btn.png")} onClick={()=>{
+                <img style={{...styles.nav, opacity:((iter-1<0 && !listening && !audioPlaying)?0.25:1)}} src={prev_btn} onClick={()=>{
                     if(iter-1<0 || listening || audioPlaying)return
                     setQuestion(questions[iter-1])
                     setIter(iter-1)
                 }}/>
                 <div style={styles.score}>{iter+1} / {questions.length}</div>
-                <img style={{...styles.nav, opacity:((iter+1>=questions.length && !listening && !audioPlaying)?0.25:1)}} src={require("../assets/next_btn.png")}  onClick={()=>{
+                <img style={{...styles.nav, opacity:((iter+1>=questions.length && !listening && !audioPlaying)?0.25:1)}} src={next_btn}  onClick={()=>{
                     if(iter+1>=questions.length || listening || audioPlaying)return
                     setQuestion(questions[iter+1])
                     setIter(iter+1)

@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import axios from 'axios';
 import {useNavigate} from 'react-router-dom';
 import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
+import horizontal_logo from"../assets/horizontal_logo.png"
+import login_art from"../assets/login_art.png"
 
 function Login() {
     const navigate=useNavigate();
@@ -72,7 +74,7 @@ function Login() {
     }
     return (
       <div style={styles.screen}>
-            <div style={styles.logo}><img style={{height:'0.7in'}} src={require("../assets/horizontal_logo.png")}/></div>
+            <div style={styles.logo}><img style={{height:'0.7in'}} src={horizontal_logo}/></div>
             <div style={styles.nonLogo}>
                 <div style={styles.login}>
                     <div style={{width: 'fit-content'}}>
@@ -88,7 +90,7 @@ function Login() {
                     </div>
                 </div>
                 {windowWidth>=700 && <div style={styles.login}>
-                    <img style={{width:'38vw'}} src={require("../assets/login_art.jpg")}/>
+                    <img style={{width:'38vw'}} src={login_art}/>
                 </div>}
             </div>
       </div>

@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from "react";
 import axios from 'axios';
 import {useNavigate} from 'react-router-dom';
+import logo from"../assets/logo.png"
+import cancel_btn from"../assets/cancel_btn.png"
+import account_blue_btn from"../assets/account_blue_btn.png"
+import account_btn from"../assets/account_btn.png"
 
 function Home() {
     const navigate=useNavigate();
@@ -237,8 +241,8 @@ function Home() {
         <div style={styles.page}>
             {(windowWidth>=700 || pageType==="Questions") && <div style={styles.half}>
                 <div style={styles.header}>
-                    {windowWidth>=700 && <img style={{height:'0.4in',marginRight:'0.1in'}} src={require("../assets/logo.png")}/>}
-                    {windowWidth<700 && <img style={{height:'0.4in',marginRight:'0.1in'}} src={require("../assets/account_blue_btn.png")}  onClick={()=>navigate("../account")}/>}
+                    {windowWidth>=700 && <img style={{height:'0.4in',marginRight:'0.1in'}} src={logo}/>}
+                    {windowWidth<700 && <img style={{height:'0.4in',marginRight:'0.1in'}} src={account_blue_btn}  onClick={()=>navigate("../account")}/>}
                     <input style={styles.inputBox} placeholder="Search"/>
                     <div style={{...styles.smallBtn,backgroundColor:'rgb(255,124,128)'}}  onClick={()=>navigate("../countdown")}>Practice</div>
                 </div>
@@ -263,9 +267,9 @@ function Home() {
             </div>}
             {(windowWidth>=700 || pageType==="Records") && <div style={{...styles.half, backgroundColor:'rgb(102,153,255)'}}>
                 <div style={{...styles.header, flexDirection:(windowWidth>=700?'row':'row-reverse')}}>
-                    <img style={{height:'0.4in'}} src={require("../assets/cancel_btn.png")}/>
+                    <img style={{height:'0.4in'}} src={cancel_btn}/>
                     <div style={styles.recordTitle}>Your record</div>
-                    <img style={{height:'0.4in'}} src={require("../assets/account_btn.png")} onClick={()=>navigate("../account")}/>
+                    <img style={{height:'0.4in'}} src={account_btn} onClick={()=>navigate("../account")}/>
                 </div>
                 <div style={{...styles.list,backgroundColor:'rgb(150,220,248'}}>
                     {records.map((item,index)=>(
