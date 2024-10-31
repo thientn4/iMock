@@ -237,7 +237,8 @@ function Home() {
         <div style={styles.page}>
             {(windowWidth>=700 || pageType==="Questions") && <div style={styles.half}>
                 <div style={styles.header}>
-                    <img style={{height:'0.4in',marginRight:'0.1in'}} src={require("../assets/logo.png")}/>
+                    {windowWidth>=700 && <img style={{height:'0.4in',marginRight:'0.1in'}} src={require("../assets/logo.png")}/>}
+                    {windowWidth<700 && <img style={{height:'0.4in',marginRight:'0.1in'}} src={require("../assets/account_blue_btn.png")}  onClick={()=>navigate("../account")}/>}
                     <input style={styles.inputBox} placeholder="Search"/>
                     <div style={{...styles.smallBtn,backgroundColor:'rgb(255,124,128)'}}  onClick={()=>navigate("../countdown")}>Practice</div>
                 </div>
