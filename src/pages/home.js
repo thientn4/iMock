@@ -262,8 +262,8 @@ function Home() {
                 </div>
             </div>}
             {(windowWidth>=700 || pageType==="Records") && <div style={{...styles.half, backgroundColor:'rgb(102,153,255)'}}>
-                <div style={styles.header}>
-                    <img style={{height:'0.4in'}} src={require("../assets/prev_btn.png")}/>
+                <div style={{...styles.header, flexDirection:(windowWidth>=700?'row':'row-reverse')}}>
+                    <img style={{height:'0.4in'}} src={require("../assets/cancel_btn.png")}/>
                     <div style={styles.recordTitle}>Your record</div>
                     <img style={{height:'0.4in'}} src={require("../assets/account_btn.png")} onClick={()=>navigate("../account")}/>
                 </div>

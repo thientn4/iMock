@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from 'axios';
 import {useNavigate} from 'react-router-dom';
+import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 
 function Login() {
     const navigate=useNavigate();
@@ -19,9 +20,11 @@ function Login() {
     useEffect(() => {
       //if(localStorage.getItem('email'))navigate("home")
     }, []);
-    const login = async () => {
+    const login = async(obj)=>{
+        console.log(obj.credential)
+        //localStorage.setItem('token', 'G'+obj.credential) // 'A' for Azure
         navigate("home")
-    };
+      }
     const styles={
         screen:{
             width:'100vw',
@@ -75,7 +78,13 @@ function Login() {
                     <div style={{width: 'fit-content'}}>
                         <div style={styles.bigWelcome}>Welcome to iMock</div>
                         <div style={styles.smallWelcome}>Let's start acing those interviews!</div>
-                        <img style={{width:'2in'}} src={require("../assets/login_btn.png")} onClick={login}/>
+                        <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}>
+                            <GoogleLogin 
+                                shape="circle"
+                                size="medium"
+                                onSuccess={(credential)=>login(credential)}
+                            />
+                        </GoogleOAuthProvider>
                     </div>
                 </div>
                 {windowWidth>=700 && <div style={styles.login}>
