@@ -4,6 +4,18 @@ import {useNavigate} from 'react-router-dom';
 
 function Login() {
     const navigate=useNavigate();
+    const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+    useEffect(() => {
+      const handleResize = () => {
+        setWindowWidth(window.innerWidth);
+      };
+  
+      window.addEventListener('resize', handleResize);
+  
+      return () => {
+        window.removeEventListener('resize', handleResize);
+      };
+    }, []);
     useEffect(() => {
       //if(localStorage.getItem('email'))navigate("home")
     }, []);
@@ -66,9 +78,9 @@ function Login() {
                         <img style={{width:'2in'}} src={require("../assets/login_btn.png")} onClick={login}/>
                     </div>
                 </div>
-                <div style={styles.login}>
+                {windowWidth>=700 && <div style={styles.login}>
                     <img style={{width:'38vw'}} src={require("../assets/login_art.jpg")}/>
-                </div>
+                </div>}
             </div>
       </div>
     );
