@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from 'axios';
 import {useNavigate} from 'react-router-dom';
+import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition'
 
 function Interview() {
     const navigate=useNavigate();
@@ -13,22 +14,17 @@ function Interview() {
     cur_speech.addEventListener("end",()=>{setSpeaking(false)})
     cur_speech.addEventListener("start",()=>{setSpeaking(true)})
     /////////////////// SPEECH TO TEXT SETUP ////////////////////
-    const recognition = new window.webkitSpeechRecognition();
+    const {
+        transcript,
+        listening,
+        resetTranscript,
+        browserSupportsSpeechRecognition,
+        isMicrophoneAvailable
+    } = useSpeechRecognition();
+  /////////////////////////////////////////////////////////////
 
-    recognition.lang = 'en-US';
-    recognition.onstart = () => {
-        console.log("speech started")
-    };
-    
-    recognition.onresult = (event) => {
-        const transcript = event.results[0][0].transcript;
-        console.log(transcript)
-    };
-    
-    recognition.onend = () => {
-        console.log("speech ended")
-    };
-    /////////////////////////////////////////////////////////////
+
+
     const [speaking, setSpeaking]=useState(false)
     const [audioPlaying, setAudioPlaying]=useState(false)
     const [recording, setRecording]=useState(false)
@@ -176,15 +172,27 @@ function Interview() {
             <div style={styles.btn} onClick={()=>{
                 if(speaking || audioPlaying)return
                 if(recording){
-                    recognition.stop();
+                    SpeechRecognition.stopListening();
                     setMp3(require("../assets/sample_audio.mp3"))
+                    console.log(transcript)
                 }
                 else{
+                    if (!browserSupportsSpeechRecognition ) {
+                        alert("This browser does not support our platform")
+                        return
+                    }
+                    if (!isMicrophoneAvailable) {
+                        alert("Please enable iMock to use microphone")
+                        return
+                    }
                     if(mp3){
-                        if(window.confirm("Are you sure you want to delete and answer again?"))setMp3(null)
+                        if(window.confirm("Are you sure you want to delete and answer again?")){
+                            setMp3(null)
+                            resetTranscript()
+                        }
                         else return
                     }
-                    recognition.start();
+                    SpeechRecognition.startListening({ continuous: true });
                 }
                 setRecording(!recording)
             }}>{recording?"Done":"Answer"}</div>
