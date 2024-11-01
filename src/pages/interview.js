@@ -40,9 +40,9 @@ function Interview() {
         "Tell me about the time when you worked for Power Settlement. Name some challenges you faced and how you handled them.",
         "How do you handle stress?"
     ]
-    const answers=new Array(questions.length).fill(null)
     const [iter, setIter]=useState(0)
     const [question, setQuestion]=useState(questions[iter])
+    const [answers, setAnswers]=useState(new Array(3).fill(null))
     const [mp3, setMp3]=useState(null)
     const speak=(content)=>{
         if(listening || audioPlaying)return
@@ -162,6 +162,7 @@ function Interview() {
             }}>
                 <img style={{...styles.nav, opacity:((iter-1<0 && !listening && !audioPlaying)?0.25:1)}} src={prev_btn} onClick={()=>{
                     if(iter-1<0 || listening || audioPlaying)return
+                    setMp3(null)
                     setQuestion(questions[iter-1])
                     setIter(iter-1)
                 }}/>
@@ -172,10 +173,12 @@ function Interview() {
                         setSpeaking(false)
                         speechSynthesis.cancel()
                         if(window.confirm("You want to end and submit for review?")){
+                            console.log(answers)
                             navigate('../home')
                         }
                         return
                     }
+                    setMp3(null)
                     setQuestion(questions[iter+1])
                     setIter(iter+1)
                 }}/>
@@ -185,7 +188,6 @@ function Interview() {
                 if(listening){
                     SpeechRecognition.stopListening();
                     setMp3(require("../assets/sample_audio.mp3"))
-                    console.log(transcript)
                     answers[iter]=transcript
                 }
                 else{
@@ -200,10 +202,10 @@ function Interview() {
                     if(mp3){
                         if(window.confirm("Are you sure you want to delete and answer again?")){
                             setMp3(null)
-                            resetTranscript()
                         }
                         else return
                     }
+                    resetTranscript()
                     SpeechRecognition.startListening({ continuous: true });
                 }
             }}>{listening?"Done":"Answer"}</div>
