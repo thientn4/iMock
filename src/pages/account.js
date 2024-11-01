@@ -20,7 +20,8 @@ function Account() {
             flexDirection:'column',
             justifyContent:'center',
             alignItems:'center',
-            backgroundColor:'white'
+            backgroundColor:'white',
+            userSelect:'none',
         },
         container:{
             display:'flex',
@@ -36,7 +37,6 @@ function Account() {
             flexDirection:'column',
             justifyContent:'center',
             fontSize:'0.2in',
-            userSelect:'none',
             width:'100%'
         }
     }
