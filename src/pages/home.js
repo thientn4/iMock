@@ -3,6 +3,7 @@ import axios from 'axios';
 import {useNavigate} from 'react-router-dom';
 import logo from"../assets/logo.png"
 import cancel_btn from"../assets/cancel_btn.png"
+import small_loading from"../assets/small_loading.gif"
 import account_blue_btn from"../assets/account_blue_btn.png"
 import account_btn from"../assets/account_btn.png"
 
@@ -244,6 +245,7 @@ function Home() {
                 <div style={styles.header}>
                     {windowWidth>=700 && <img style={{height:'0.4in',marginRight:'0.1in'}} src={logo}/>}
                     {windowWidth<700 && <img style={{height:'0.4in',marginRight:'0.1in'}} src={account_blue_btn}  onClick={()=>navigate("../account")}/>}
+                    {/*<div style={{backgroundColor:'rgb(102,153,255)', marginRight:'0.1in', borderRadius:'0.06in',height:'0.4in'}}><img style={{height:'0.4in'}} src={small_loading}/></div>*/}
                     <input style={styles.inputBox} placeholder="Search"/>
                     <div style={{...styles.smallBtn,backgroundColor:'rgb(255,124,128)'}}  onClick={()=>navigate("../countdown")}>Practice</div>
                 </div>
