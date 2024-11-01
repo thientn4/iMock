@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from 'axios';
-import {useNavigate} from 'react-router-dom';
+import {useLocation, useNavigate} from 'react-router-dom';
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition'
 import cancel_btn from"../assets/cancel_btn.png"
 import horizontal_logo_mono from"../assets/horizontal_logo_mono.png"
@@ -35,14 +35,11 @@ function Interview() {
 
     const [speaking, setSpeaking]=useState(false)
     const [audioPlaying, setAudioPlaying]=useState(false)
-    const questions = [
-        "Can you introduce yourself?",
-        "Tell me about the time when you worked for Power Settlement. Name some challenges you faced and how you handled them.",
-        "How do you handle stress?"
-    ]
+    const params=useLocation();
+    const questions=params.state.questions
     const [iter, setIter]=useState(0)
     const [question, setQuestion]=useState(questions[iter])
-    const [answers, setAnswers]=useState(new Array(3).fill(null))
+    const [answers, setAnswers]=useState(new Array(questions.length).fill(null))
     const [mp3, setMp3]=useState(null)
     const speak=(content)=>{
         if(listening || audioPlaying)return

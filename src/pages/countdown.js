@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import axios from 'axios';
-import {useNavigate} from 'react-router-dom';
+import {useLocation, useNavigate} from 'react-router-dom';
 import cancel_btn from"../assets/cancel_btn.png"
 import horizontal_logo_mono from"../assets/horizontal_logo_mono.png"
 import loading from"../assets/loading.gif"
 
 function Countdown() {
     const navigate=useNavigate();
+    const params=useLocation();
+    const questions=params.state.questions
     const [second,setSecond]=useState(10)
     const [clicked, setClicked]=useState(false)
     const styles={
@@ -70,7 +72,11 @@ function Countdown() {
         for(let i=0; i<=11; i++)
             setTimeout(()=>{
                 if(second-i>=0)setSecond(second-i)
-                if(second-i===-1)navigate("../interview")
+                if(second-i===-1)navigate("../interview",{
+                    state:{
+                        questions:questions
+                    }
+                })
             },1000*i)
     }
     return (

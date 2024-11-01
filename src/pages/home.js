@@ -27,36 +27,32 @@ function Home() {
     useEffect(() => {
         setQuestions([
             {
+                question:"Can you introduce yourself?",
+                origin:null
+            },
+            {
+                question:"How do you handle stress?",
+                origin:null
+            },
+            {
+                question:"Why are you looking for a new job? Was there something wrong from your previous employer?",
+                origin:null
+            },
+            {
                 question:"Tell me about the time when you worked for Power Settlement. Name some challenges you faced and how you handled them.",
                 origin:"Resume"
             },
             {
-                question:"Tell me about the time when you worked for Power Settlement. Name some challenges you faced and how you handled them.",
+                question:"What did you do at JM-Eagle? Describe projects you have worked on.",
                 origin:"Resume"
             },
             {
-                question:"Tell me about the time when you worked for Power Settlement. Name some challenges you faced and how you handled them.",
+                question:"Tell me about your experiences with AWS",
                 origin:"Post"
             },
             {
-                question:"Tell me about the time when you worked for Power Settlement. Name some challenges you faced and how you handled them.",
+                question:"Tell me about your experiences with ReactNative",
                 origin:"Post"
-            },
-            {
-                question:"Tell me about the time when you worked for Power Settlement. Name some challenges you faced and how you handled them.",
-                origin:null
-            },
-            {
-                question:"Tell me about the time when you worked for Power Settlement.",
-                origin:null
-            },
-            {
-                question:"Tell me about the time when you worked for Power Settlement. Name some challenges you faced and how you handled them.",
-                origin:null
-            },
-            {
-                question:"Tell me about the time when you worked for Power Settlement. Name some challenges you faced and how you handled them.",
-                origin:null
             }
         ])
         setRecords([
@@ -67,37 +63,37 @@ function Home() {
                 questionCount:10
             },
             {
-                timestamp:"10/27/2024 - 10:30am",
+                timestamp:"10/27/2024 - 10:28am",
                 expire:7,
                 time:60,
                 questionCount:10
             },
             {
-                timestamp:"10/27/2024 - 10:30am",
+                timestamp:"10/27/2024 - 10:15am",
                 expire:7,
                 time:30,
                 questionCount:10
             },
             {
-                timestamp:"10/27/2024 - 10:30am",
+                timestamp:"10/26/2024 - 10:30am",
                 expire:7,
                 time:62,
                 questionCount:10
             },
             {
-                timestamp:"10/27/2024 - 10:30am",
+                timestamp:"10/25/2024 - 10:30am",
                 expire:7,
                 time:3602,
                 questionCount:10
             },
             {
-                timestamp:"10/27/2024 - 10:30am",
+                timestamp:"10/24/2024 - 10:30am",
                 expire:7,
                 time:3660,
                 questionCount:10
             },
             {
-                timestamp:"10/27/2024 - 10:30am",
+                timestamp:"10/23/2024 - 10:30am",
                 expire:7,
                 time:5420,
                 questionCount:10
@@ -247,7 +243,11 @@ function Home() {
                     {windowWidth<700 && <img style={{height:'0.4in',marginRight:'0.1in'}} src={account_blue_btn}  onClick={()=>navigate("../account")}/>}
                     {/*<div style={{backgroundColor:'rgb(102,153,255)', marginRight:'0.1in', borderRadius:'0.06in',height:'0.4in'}}><img style={{height:'0.4in'}} src={small_loading}/></div>*/}
                     <input style={styles.inputBox} placeholder="Search"/>
-                    <div style={{...styles.smallBtn,backgroundColor:'rgb(255,124,128)'}}  onClick={()=>navigate("../countdown")}>Practice</div>
+                    <div style={{...styles.smallBtn,backgroundColor:'rgb(255,124,128)'}}  onClick={()=>navigate("../countdown",{
+                        state:{
+                            questions:questions.map((item)=>item.question)
+                        }
+                    })}>Practice</div>
                 </div>
                 <div style={{...styles.list,backgroundColor:'rgb(211,211,211)'}}>
                     {questions.map((item,index)=>(
