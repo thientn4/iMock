@@ -219,16 +219,6 @@ function Home() {
             borderBottomRightRadius:'0.075in'
         }
     }
-    function fromSeconds(totalSeconds) {
-        const hours = Math.floor(totalSeconds / 3600);
-        const minutes = Math.floor((totalSeconds % 3600) / 60);
-        const seconds = totalSeconds % 60;
-        const hoursStr = hours===0?'':`${hours} hours `;
-        const minutesStr = minutes===0?'':`${minutes} minutes `;
-        const secondsStr = seconds===0?'':`${seconds} seconds`;
-      
-        return hoursStr+minutesStr+secondsStr;
-    }
     return (
       <div style={styles.screen}>
         {windowWidth<700 && <div style={{...styles.header, backgroundColor:'rgb(211,211,211)'}}>
@@ -279,8 +269,8 @@ function Home() {
                     {records.map((item,index)=>(
                         <div style={styles.listItem} key={index}>
                             <div style={styles.questionContent}>
-                                <div style={{color:'rgb(102,153,255)'}}><b style={{paddingRight:'0.15in',color:'rgb(87,87,87)'}}>{item.timestamp}</b> {"Expire in "+item.expire+(item.expire<=1?" day":" days")}</div>
-                                <div style={{color:'dimgrey'}}>{fromSeconds(item.time)}</div>
+                                <b style={{color:'rgb(87,87,87)'}}>{item.timestamp}</b>
+                                <div style={{color:'rgb(102,153,255)'}}>{"Expire in "+item.expire+(item.expire<=1?" day":" days")}</div>
                                 <div>{item.questionCount+" questions answered and reviewed"}</div>
                             </div>
                             <div style={{...styles.deleteBtn,backgroundColor:'rgb(255,124,128)'}}>X</div>
