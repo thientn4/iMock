@@ -34,7 +34,6 @@ function Interview() {
 
 
     const [speaking, setSpeaking]=useState(false)
-    const [audioPlaying, setAudioPlaying]=useState(false)
     const params=useLocation();
     const questions=params.state.questions
     const [iter, setIter]=useState(0)
@@ -42,7 +41,7 @@ function Interview() {
     const [answers, setAnswers]=useState(new Array(questions.length).fill(null))
     const [mp3, setMp3]=useState(null)
     const speak=(content)=>{
-        if(listening || audioPlaying)return
+        if(listening)return
         speechSynthesis.cancel();
         cur_speech.text=content
         speechSynthesis.speak(cur_speech)
@@ -50,6 +49,9 @@ function Interview() {
     useEffect(() => {
         speak(question)
     },[question])
+    useEffect(() => {
+        console.log("1. "+transcript)
+    },[transcript])
     const styles={
         screen:{
             width:'100vw',
@@ -84,7 +86,7 @@ function Interview() {
             userSelect:'none',
             opacity:speaking?0.5:1,
             width:'100%',
-            opacity:(speaking || audioPlaying)?0.25:1
+            opacity:(speaking)?0.25:1
         },
         score:{
             borderRadius:'0.075in',
@@ -118,14 +120,25 @@ function Interview() {
             flexDirection:'column',
             justifyContent:'center',
             marginBottom:'0.5in',
-            position:'relative',
-            opacity:audioPlaying?0.25:1
+            position:'relative'
         },
         nav:{
             borderRadius:'100%',
             border:'solid',
             borderColor:'rgb(102,153,255)',
             height:'0.4in'
+        },
+        transcript:{
+            //height:'0.5in', 
+            width:'100%', 
+            whiteSpace:'nowrap', 
+            overflow:'hidden',
+            overflowX:'auto',
+            display:'flex',
+            flexDirection:'row-reverse',
+
+            border:'solid medium',
+            borderColor:transcript?'rgb(255,124,128)':'white',
         }
     }
     return (
@@ -141,7 +154,7 @@ function Interview() {
             justifyContent:'center',
             alignItems:'center',
             flexGrow:1,
-            width:'fit-content'
+            width:'3in'
         }}>
             <div style={styles.audio}>
                 <img style={{width:'1in', display:((speaking && !listening)?'':'none')}} src={speaker}/>
@@ -155,17 +168,17 @@ function Interview() {
                 flexDirection:'row',
                 justifyContent:'center',
                 width:'100%',
-                opacity:((listening || audioPlaying)?0.25:1)
+                opacity:((listening)?0.25:1)
             }}>
-                <img style={{...styles.nav, opacity:((iter-1<0 && !listening && !audioPlaying)?0.25:1)}} src={prev_btn} onClick={()=>{
-                    if(iter-1<0 || listening || audioPlaying)return
-                    setMp3(null)
+                <img style={{...styles.nav, opacity:((iter-1<0 && !listening)?0.25:1)}} src={prev_btn} onClick={()=>{
+                    if(iter-1<0 || listening)return
+                    resetTranscript()
                     setQuestion(questions[iter-1])
                     setIter(iter-1)
                 }}/>
                 <div style={styles.score}>{iter+1} / {questions.length}</div>
                 <img style={{...styles.nav}} src={iter+1>=questions.length?submit_btn:next_btn}  onClick={()=>{
-                    if(listening || audioPlaying)return
+                    if(listening)return
                     if(iter+1>=questions.length){
                         setSpeaking(false)
                         speechSynthesis.cancel()
@@ -175,16 +188,15 @@ function Interview() {
                         }
                         return
                     }
-                    setMp3(null)
+                    resetTranscript()
                     setQuestion(questions[iter+1])
                     setIter(iter+1)
                 }}/>
             </div>
             <div style={styles.btn} onClick={()=>{
-                if(speaking || audioPlaying)return
+                if(speaking)return
                 if(listening){
                     SpeechRecognition.stopListening();
-                    setMp3(require("../assets/sample_audio.mp3"))
                     answers[iter]=transcript
                 }
                 else{
@@ -196,30 +208,15 @@ function Interview() {
                         alert("Please enable iMock to use microphone")
                         return
                     }
-                    if(mp3){
-                        if(window.confirm("Are you sure you want to delete and answer again?")){
-                            setMp3(null)
-                        }
-                        else return
+                    if(transcript){
+                        if(!window.confirm("Are you sure you want to delete and answer again?"))return
                     }
                     resetTranscript()
                     SpeechRecognition.startListening({ continuous: true });
                 }
             }}>{listening?"Done":"Answer"}</div>
-            <div style={{height:'0.5in',width:'100%'}}>
-                {mp3  && <audio 
-                    controls 
-                    controlsList = "noplaybackrate nodownload" 
-                    style={{height:'0.5in',width:'100%',opacity:(speaking?0.5:1),pointerEvents:((speaking || listening)?'none':'')}} 
-                    id="audioPlayer" 
-                    disabled={speaking}
-                    onPlay={()=>{setAudioPlaying(true)}}
-                    onPause={()=>{setAudioPlaying(false)}}
-                    onEnd={()=>{setAudioPlaying(false)}}
-                >
-                    <source src={mp3} type="audio/mpeg"/>
-                    Your browser does not support the audio element.
-                </audio>}
+            <div style={styles.transcript} id="transcript_box">
+                <div style={{padding:'0.1in'}}>{transcript}</div>
             </div>
         </div>
       </div>

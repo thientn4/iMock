@@ -6,6 +6,7 @@ import cancel_btn from"../assets/cancel_btn.png"
 import small_loading from"../assets/small_loading.gif"
 import account_blue_btn from"../assets/account_blue_btn.png"
 import account_btn from"../assets/account_btn.png"
+import interview_btn from"../assets/interview.png"
 
 function Home() {
     const navigate=useNavigate();
@@ -242,12 +243,12 @@ function Home() {
                     {windowWidth>=700 && <img style={{height:'0.4in',marginRight:'0.1in'}} src={logo}/>}
                     {windowWidth<700 && <img style={{height:'0.4in',marginRight:'0.1in'}} src={account_blue_btn}  onClick={()=>navigate("../account")}/>}
                     {/*<div style={{backgroundColor:'rgb(102,153,255)', marginRight:'0.1in', borderRadius:'0.06in',height:'0.4in'}}><img style={{height:'0.4in'}} src={small_loading}/></div>*/}
-                    <input style={styles.inputBox} placeholder="Search"/>
-                    <div style={{...styles.smallBtn,backgroundColor:'rgb(255,124,128)'}}  onClick={()=>navigate("../countdown",{
+                    <input style={styles.inputBox} placeholder="Search your questions"/>
+                    <img style={{borderRadius:'0.075in', height:'0.4in'}} src={interview_btn}  onClick={()=>navigate("../countdown",{
                         state:{
                             questions:questions.map((item)=>item.question)
                         }
-                    })}>Practice</div>
+                    })}/>
                 </div>
                 <div style={{...styles.list,backgroundColor:'rgb(211,211,211)'}}>
                     {questions.map((item,index)=>(
