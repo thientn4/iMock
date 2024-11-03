@@ -2,8 +2,9 @@ import React, { useEffect, useState } from "react";
 import axios from 'axios';
 import {useNavigate} from 'react-router-dom';
 import logo from"../assets/logo.png"
+import blue_logo from"../assets/blue_logo.png"
 import cancel_btn from"../assets/cancel_btn.png"
-import small_loading from"../assets/small_loading.gif"
+import loading from"../assets/loading.gif"
 import account_blue_btn from"../assets/account_blue_btn.png"
 import account_btn from"../assets/account_btn.png"
 import interview_btn from"../assets/interview.png"
@@ -16,7 +17,23 @@ function Home() {
     const [pageType,setPageType]=useState("Questions")
     const [addDoc,setAddDoc]=useState("")
     const [document,setDocument]=useState("")
+    const [isLoading,setIsLoading]=useState("")
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+    function shuffle(array) {
+        let currentIndex = array.length;
+      
+        // While there remain elements to shuffle...
+        while (currentIndex != 0) {
+      
+          // Pick a remaining element...
+          let randomIndex = Math.floor(Math.random() * currentIndex);
+          currentIndex--;
+      
+          // And swap it with the current element.
+          [array[currentIndex], array[randomIndex]] = [
+            array[randomIndex], array[currentIndex]];
+        }
+    }
     const getQuestions=()=>{
         axios({
             url:process.env.REACT_APP_BACKEND+'questions/get',
@@ -59,7 +76,9 @@ function Home() {
                 window.location.assign(window.location.origin);
             }
             else alert("Failed to add question")
-        }).catch((error)=>{})
+        }).catch((error)=>{
+            alert("Failed to add question")
+        })
     }
     const deleteQuestion=(question)=>{
         axios({
@@ -85,7 +104,44 @@ function Home() {
                 window.location.assign(window.location.origin);
             }
             else alert("Failed to delete question")
-        }).catch((error)=>{})
+        }).catch((error)=>{
+            alert("Failed to delete question")
+        })
+    }
+    const addDocument=()=>{
+        if(document==="" || addDoc==="")return
+        setIsLoading("questions")
+        axios({
+            url:process.env.REACT_APP_BACKEND+'questions/addDocument',
+            method:'POST',
+            timeout: 5000,
+            headers: {
+                'Content-Type': 'application/json',
+                'token':localStorage.getItem('token')
+            },
+            data:JSON.stringify({
+                document:{
+                    content:document,
+                    type:addDoc
+                }
+            })
+        }).then((response)=>{
+            if(response.data.status==="success"){
+                setDocument("")
+                setAddDoc("")
+                getQuestions()
+            }
+            else if(response.data.status==='token missing' || response.data.status==='session expired' || response.data.status==='invalid token'){
+                localStorage.clear()
+                alert("Session expired. Please login again")
+                window.location.assign(window.location.origin);
+            }
+            else alert("Failed to upload your "+addDoc+". Make sure your entered information is relevant")
+            setIsLoading("")
+        }).catch((error)=>{
+            alert("Failed to upload your "+addDoc+". Make sure your entered information is relevant")
+            setIsLoading("")
+        })
     }
     useEffect(() => {
         const handleResize = () => {
@@ -271,6 +327,30 @@ function Home() {
             userSelect:'none',
             borderTopRightRadius:'0.075in',
             borderBottomRightRadius:'0.075in'
+        },
+        loading_screen:{
+            display:'flex',
+            flexDirection:'column',
+            justifyContent:'center',
+            alignItems:'center',
+            flexGrow:1
+        },
+        loading_logo:{
+            height:'1.5in',
+            width:'1.5in',
+            color:'rgb(102,153,255)',
+            display:'flex',
+            alignItems:'center',
+            flexDirection:'column',
+            justifyContent:'center',
+            position:'relative'
+        },
+        looper:{
+            height:'1.5in',
+            width:'1.5in',
+            position:'absolute',
+            left:0,
+            top:0
         }
     }
     return (
@@ -286,41 +366,52 @@ function Home() {
                 {!addDoc && <div style={styles.header}>
                     {windowWidth>=700 && <img style={{height:'0.4in',marginRight:'0.1in'}} src={logo}/>}
                     {windowWidth<700 && <img style={{height:'0.4in',marginRight:'0.1in'}} src={account_blue_btn}  onClick={()=>navigate("../account")}/>}
-                    {/*<div style={{backgroundColor:'rgb(102,153,255)', marginRight:'0.1in', borderRadius:'0.06in',height:'0.4in'}}><img style={{height:'0.4in'}} src={small_loading}/></div>*/}
                     <input style={styles.inputBox} placeholder="Search your questions"/>
-                    <img style={{borderRadius:'0.075in', height:'0.4in'}} src={interview_btn}  onClick={()=>navigate("../countdown",{
-                        state:{
-                            questions:questions.map((item)=>item.question)
-                        }
-                    })}/>
+                    <img style={{borderRadius:'0.075in', height:'0.4in'}} src={interview_btn}  onClick={()=>{
+                        let shuffled=[...questions]
+                        shuffle(shuffled)
+                        navigate("../countdown",{
+                            state:{
+                                questions:shuffled.slice(0,10).map((item)=>item.question)
+                            }
+                        })
+                    }}/>
                 </div>}
                 {!addDoc && <div style={{...styles.list,backgroundColor:'rgb(211,211,211)'}}>
                     {questions.map((item,index)=>{
                         let textTypes=["","Resume","Job Post"]
                         return (<div style={styles.listItem} key={index}>
-                            <div style={styles.questionContent}>{item.question}<b style={{paddingLeft:'0.15in',color:(textTypes[item.questionType]==='Resume'?'rgb(102,153,255)':'rgb(255,124,128)')}}>{textTypes[item.questionType]}</b></div>
+                            <div style={styles.questionContent}>{item.question}<div style={{fontWeight:'bold',color:(textTypes[item.questionType]==='Resume'?'rgb(102,153,255)':'rgb(255,124,128)')}}>{textTypes[item.questionType]}</div></div>
                             <div style={{...styles.deleteBtn,backgroundColor:'rgb(102,153,255)'}} onClick={()=>{deleteQuestion(item)}}>X</div>
                         </div>)
                     })}
                 </div>}
-                {addDoc && <textarea  style={styles.jobPostInputBox} placeholder="Enter or paste document here (no need for styling)" value={document} onChange={(event)=>{setDocument(event.target.value)}}/>}
-                <div style={{...styles.footer, backgroundColor:addDoc?'rgb(211,211,211)':'white'}}>
+                {!isLoading && addDoc && <textarea  style={styles.jobPostInputBox} placeholder={"Quickly enter or paste your "+addDoc+" here (no styling needed)"} value={document} onChange={(event)=>{setDocument(event.target.value)}}/>}
+                {isLoading==='questions' && <div style={styles.loading_screen}>
+                    <div style={styles.loading_logo}>
+                        <img style={styles.looper} src={loading}/>
+                        <img style={{width:'0.4in'}} src={blue_logo}/>
+                    </div>
+                </div>}
+                <div style={{...styles.footer, backgroundColor:addDoc?'rgb(211,211,211)':'white', opacity:isLoading==='questions'?0.5:1}}>
                     {!addDoc && <div style={styles.footerRow}>
                         <input style={styles.inputBox} placeholder="Interview question" value={newQuestion} onChange={(event)=>{setNewQuestion(event.target.value)}} onKeyDown={(event)=>{if(event.key==='Enter')addQuestion()}}/>
                         <div style={{...styles.smallBtn, color:'grey', border:'solid thin grey'}} onClick={addQuestion}>Add </div>
                     </div>}
                     <div style={styles.footerRow}>
                         <div style={{...styles.bigBtn,backgroundColor:'rgb(102,153,255)',marginRight:'0.05in'}} onClick={()=>{
+                            if(isLoading==='questions')return
                             if(addDoc){
                                 setDocument("")
                                 setAddDoc("")
                             }
                             else setAddDoc("resume")
-                        }}>{addDoc?"Cancel":"Add from resume"}</div>
+                        }}>{addDoc?"Cancel":"Upload resume"}</div>
                         <div style={{...styles.bigBtn,backgroundColor:'rgb(255,124,128)',marginLeft:'0.05in'}} onClick={()=>{
-                            if(addDoc) alert(addDoc+"-"+document)
-                            else setAddDoc("job")
-                        }}>{addDoc?"Upload":"Add from job post"}</div>
+                            if(isLoading==='questions')return
+                            if(addDoc) addDocument()
+                            else setAddDoc("job post")
+                        }}>{addDoc?"Upload":"Upload job post"}</div>
                     </div>
                 </div>
             </div>}

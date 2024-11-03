@@ -9,9 +9,6 @@ function Account() {
     useEffect(() => {
       //if(localStorage.getItem('email'))navigate("home")
     }, []);
-    const login = async () => {
-        navigate("home")
-    };
     const styles={
         screen:{
             width:'100vw',
@@ -50,8 +47,8 @@ function Account() {
                 localStorage.clear()
                 navigate("../")
             }}>sign out</div>
-            <div style={{...styles.btn,backgroundColor:'rgb(255,124,128)',marginBottom:'0.25in'}}>premium upgrade</div>
-            <u style={{color:'rgb(102,153,255)'}}>what is in premium?</u>
+            <div style={{...styles.btn,backgroundColor:'rgb(255,124,128)',marginBottom:'0.25in'}} onClick={()=>{alert("iMock is still under testing. You can enjoy our free plan for now!")}}>premium upgrade</div>
+            <u style={{color:'rgb(102,153,255)'}} onClick={()=>{alert("iMock is still under testing. You can enjoy our free plan for now!")}}>what is in premium?</u>
             <img style={{width:'0.5in',paddingTop:'0.45in'}} src={cancel_blue_btn}  onClick={()=>navigate("../home")}/>
         </div>
       </div>

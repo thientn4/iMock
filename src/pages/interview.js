@@ -16,7 +16,7 @@ function Interview() {
     /////////////////// TEXT TO SPEECH SETUP ////////////////////
     let cur_speech=new SpeechSynthesisUtterance();
     cur_speech.volume=1 //0 to 1
-    cur_speech.rate=1.3 //0.1 to 10
+    cur_speech.rate=1 //0.1 to 10
     cur_speech.pitch=1.2 //0 to 2
     cur_speech.lang="en-US"
     cur_speech.addEventListener("end",()=>{setSpeaking(false)})
