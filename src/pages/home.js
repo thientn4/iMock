@@ -26,6 +26,11 @@ function Home() {
             }
         }).then((response)=>{
             if(response.data.status==="success")setQuestions(response.data.questions.reverse())
+            else if(response.data.status==='token missing' || response.data.status==='session expired' || response.data.status==='invalid token'){
+                localStorage.clear()
+                alert("Session expired. Please login again")
+                window.location.assign(window.location.origin);
+            }
         }).catch((error)=>{})
     }
     const addQuestion=()=>{
@@ -45,6 +50,11 @@ function Home() {
             if(response.data.status==="success"){
                 setNewQuestion("")
                 setQuestions([{question:newQuestion, questionType:0}, ...questions])
+            }
+            else if(response.data.status==='token missing' || response.data.status==='session expired' || response.data.status==='invalid token'){
+                localStorage.clear()
+                alert("Session expired. Please login again")
+                window.location.assign(window.location.origin);
             }
             else alert("Failed to add question")
         }).catch((error)=>{})
@@ -66,6 +76,11 @@ function Home() {
                 let filteredQuestion=[...questions]
                 filteredQuestion.splice(filteredQuestion.indexOf(question),1)
                 setQuestions(filteredQuestion)
+            }
+            else if(response.data.status==='token missing' || response.data.status==='session expired' || response.data.status==='invalid token'){
+                localStorage.clear()
+                alert("Session expired. Please login again")
+                window.location.assign(window.location.origin);
             }
             else alert("Failed to delete question")
         }).catch((error)=>{})
