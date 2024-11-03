@@ -46,7 +46,10 @@ function Account() {
             <img style={{width:'1.4in',paddingBottom:'0.25in'}} src={vertical_logo}/>
             <b>ntmthien01@gmail.com</b>
             <b style={{color:'rgb(102,153,255)'}}>free plan</b>
-            <div style={{...styles.btn,backgroundColor:'rgb(102,153,255)',marginTop:'0.4in',marginBottom:'0.1in'}} onClick={()=>navigate("../")}>sign out</div>
+            <div style={{...styles.btn,backgroundColor:'rgb(102,153,255)',marginTop:'0.4in',marginBottom:'0.1in'}} onClick={()=>{
+                localStorage.clear()
+                navigate("../")
+            }}>sign out</div>
             <div style={{...styles.btn,backgroundColor:'rgb(255,124,128)',marginBottom:'0.25in'}}>premium upgrade</div>
             <u style={{color:'rgb(102,153,255)'}}>what is in premium?</u>
             <img style={{width:'0.5in',paddingTop:'0.45in'}} src={cancel_blue_btn}  onClick={()=>navigate("../home")}/>

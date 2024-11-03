@@ -10,52 +10,78 @@ import interview_btn from"../assets/interview.png"
 
 function Home() {
     const navigate=useNavigate();
+    const [newQuestion,setNewQuestion]=useState("")
     const [questions,setQuestions]=useState([])
     const [records,setRecords]=useState([])
     const [pageType,setPageType]=useState("Questions")
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+    const getQuestions=()=>{
+        axios({
+            url:process.env.REACT_APP_BACKEND+'questions/get',
+            method:'POST',
+            timeout: 5000,
+            headers: {
+                'Content-Type': 'application/json',
+                'token':localStorage.getItem('token')
+            }
+        }).then((response)=>{
+            if(response.data.status==="success")setQuestions(response.data.questions.reverse())
+        }).catch((error)=>{})
+    }
+    const addQuestion=()=>{
+        if(newQuestion==="")return
+        axios({
+            url:process.env.REACT_APP_BACKEND+'questions/add',
+            method:'POST',
+            timeout: 5000,
+            headers: {
+                'Content-Type': 'application/json',
+                'token':localStorage.getItem('token')
+            },
+            data:JSON.stringify({
+                question:newQuestion
+            })
+        }).then((response)=>{
+            if(response.data.status==="success"){
+                setNewQuestion("")
+                setQuestions([{question:newQuestion, questionType:0}, ...questions])
+            }
+            else alert("Failed to add question")
+        }).catch((error)=>{})
+    }
+    const deleteQuestion=(question)=>{
+        axios({
+            url:process.env.REACT_APP_BACKEND+'questions/delete',
+            method:'POST',
+            timeout: 5000,
+            headers: {
+                'Content-Type': 'application/json',
+                'token':localStorage.getItem('token')
+            },
+            data:JSON.stringify({
+                question:question
+            })
+        }).then((response)=>{
+            if(response.data.status==="success"){
+                let filteredQuestion=[...questions]
+                filteredQuestion.splice(filteredQuestion.indexOf(question),1)
+                setQuestions(filteredQuestion)
+            }
+            else alert("Failed to delete question")
+        }).catch((error)=>{})
+    }
     useEffect(() => {
-      const handleResize = () => {
-        setWindowWidth(window.innerWidth);
-      };
-  
-      window.addEventListener('resize', handleResize);
-  
-      return () => {
-        window.removeEventListener('resize', handleResize);
-      };
+        const handleResize = () => {
+            setWindowWidth(window.innerWidth);
+        };
+    
+        window.addEventListener('resize', handleResize);
+    
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
     }, []);
     useEffect(() => {
-        setQuestions([
-            {
-                question:"Can you introduce yourself?",
-                origin:null
-            },
-            {
-                question:"How do you handle stress?",
-                origin:null
-            },
-            {
-                question:"Why are you looking for a new job? Was there something wrong from your previous employer?",
-                origin:null
-            },
-            {
-                question:"Tell me about the time when you worked for Power Settlement. Name some challenges you faced and how you handled them.",
-                origin:"Resume"
-            },
-            {
-                question:"What did you do at JM-Eagle? Describe projects you have worked on.",
-                origin:"Resume"
-            },
-            {
-                question:"Tell me about your experiences with AWS",
-                origin:"Post"
-            },
-            {
-                question:"Tell me about your experiences with ReactNative",
-                origin:"Post"
-            }
-        ])
         setRecords([
             {
                 timestamp:"10/27/2024 - 10:30am",
@@ -100,6 +126,7 @@ function Home() {
                 questionCount:10
             }
         ])
+        getQuestions()
     }, []);
     const styles={
         screen:{
@@ -241,17 +268,18 @@ function Home() {
                     })}/>
                 </div>
                 <div style={{...styles.list,backgroundColor:'rgb(211,211,211)'}}>
-                    {questions.map((item,index)=>(
-                        <div style={styles.listItem} key={index}>
-                            <div style={styles.questionContent}>{item.question}<b style={{paddingLeft:'0.15in',color:(item.origin==='Resume'?'rgb(102,153,255)':'rgb(255,124,128)')}}>{item.origin}</b></div>
-                            <div style={{...styles.deleteBtn,backgroundColor:'rgb(102,153,255)'}}>X</div>
-                        </div>
-                    ))}
+                    {questions.map((item,index)=>{
+                        let textTypes=["","Resume","Job Post"]
+                        return (<div style={styles.listItem} key={index}>
+                            <div style={styles.questionContent}>{item.question}<b style={{paddingLeft:'0.15in',color:(textTypes[item.questionType]==='Resume'?'rgb(102,153,255)':'rgb(255,124,128)')}}>{textTypes[item.questionType]}</b></div>
+                            <div style={{...styles.deleteBtn,backgroundColor:'rgb(102,153,255)'}} onClick={()=>{deleteQuestion(item)}}>X</div>
+                        </div>)
+                    })}
                 </div>
                 <div style={styles.footer}>
                     <div style={styles.footerRow}>
-                        <input style={styles.inputBox} placeholder="Interview question"/>
-                        <div style={{...styles.smallBtn, color:'grey', border:'solid thin grey'}}>Add </div>
+                        <input style={styles.inputBox} placeholder="Interview question" value={newQuestion} onChange={(event)=>{setNewQuestion(event.target.value)}} onKeyDown={(event)=>{if(event.key==='Enter')addQuestion()}}/>
+                        <div style={{...styles.smallBtn, color:'grey', border:'solid thin grey'}} onClick={addQuestion}>Add </div>
                     </div>
                     <div style={styles.footerRow}>
                         <div style={{...styles.bigBtn,backgroundColor:'rgb(102,153,255)',marginRight:'0.05in'}}>Upload resume</div>

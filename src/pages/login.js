@@ -20,11 +20,10 @@ function Login() {
       };
     }, []);
     useEffect(() => {
-      //if(localStorage.getItem('email'))navigate("home")
+        if(localStorage.getItem('token'))navigate("home")
     }, []);
     const login = async(obj)=>{
-        console.log(obj.credential)
-        //localStorage.setItem('token', 'G'+obj.credential) // 'A' for Azure
+        localStorage.setItem('token', obj.credential)
         navigate("home")
       }
     const styles={
