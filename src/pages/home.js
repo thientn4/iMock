@@ -14,6 +14,8 @@ function Home() {
     const [questions,setQuestions]=useState([])
     const [records,setRecords]=useState([])
     const [pageType,setPageType]=useState("Questions")
+    const [addDoc,setAddDoc]=useState("")
+    const [document,setDocument]=useState("")
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
     const getQuestions=()=>{
         axios({
@@ -189,6 +191,16 @@ function Home() {
             border:'solid thin grey',
             paddingRight:'0.1in',
             paddingLeft:'0.1in',
+            outline:'none'
+        },
+        jobPostInputBox:{
+            padding:'0.1in',
+            paddingTop:'0.1in',
+            paddingBottom:'0.1in',
+            resize:'none',
+            flexGrow:1,
+            border:'none',
+            outline:'none'
         },
         smallBtn:{
             color:'white',
@@ -216,7 +228,7 @@ function Home() {
             height:'fit-content',
             display:'flex',
             flexDirection:'column',
-            marginTop:'0.1in',
+            paddingTop:'0.1in',
             userSelect:'none'
         },
         footerRow:{
@@ -264,14 +276,14 @@ function Home() {
     return (
       <div style={styles.screen}>
         {windowWidth<700 && <div style={{...styles.header, backgroundColor:'rgb(211,211,211)'}}>
-            <select style={styles.selectBox} value={pageType} onChange={(event)=>{setPageType(event.target.value)}}>
+            <select disabled={addDoc} style={styles.selectBox} value={pageType} onChange={(event)=>{setPageType(event.target.value)}}>
                 <option>Questions</option>
                 <option>Records</option>
             </select>
         </div>}
         <div style={styles.page}>
             {(windowWidth>=700 || pageType==="Questions") && <div style={styles.half}>
-                <div style={styles.header}>
+                {!addDoc && <div style={styles.header}>
                     {windowWidth>=700 && <img style={{height:'0.4in',marginRight:'0.1in'}} src={logo}/>}
                     {windowWidth<700 && <img style={{height:'0.4in',marginRight:'0.1in'}} src={account_blue_btn}  onClick={()=>navigate("../account")}/>}
                     {/*<div style={{backgroundColor:'rgb(102,153,255)', marginRight:'0.1in', borderRadius:'0.06in',height:'0.4in'}}><img style={{height:'0.4in'}} src={small_loading}/></div>*/}
@@ -281,8 +293,8 @@ function Home() {
                             questions:questions.map((item)=>item.question)
                         }
                     })}/>
-                </div>
-                <div style={{...styles.list,backgroundColor:'rgb(211,211,211)'}}>
+                </div>}
+                {!addDoc && <div style={{...styles.list,backgroundColor:'rgb(211,211,211)'}}>
                     {questions.map((item,index)=>{
                         let textTypes=["","Resume","Job Post"]
                         return (<div style={styles.listItem} key={index}>
@@ -290,15 +302,25 @@ function Home() {
                             <div style={{...styles.deleteBtn,backgroundColor:'rgb(102,153,255)'}} onClick={()=>{deleteQuestion(item)}}>X</div>
                         </div>)
                     })}
-                </div>
-                <div style={styles.footer}>
-                    <div style={styles.footerRow}>
+                </div>}
+                {addDoc && <textarea  style={styles.jobPostInputBox} placeholder="Enter or paste document here (no need for styling)" value={document} onChange={(event)=>{setDocument(event.target.value)}}/>}
+                <div style={{...styles.footer, backgroundColor:addDoc?'rgb(211,211,211)':'white'}}>
+                    {!addDoc && <div style={styles.footerRow}>
                         <input style={styles.inputBox} placeholder="Interview question" value={newQuestion} onChange={(event)=>{setNewQuestion(event.target.value)}} onKeyDown={(event)=>{if(event.key==='Enter')addQuestion()}}/>
                         <div style={{...styles.smallBtn, color:'grey', border:'solid thin grey'}} onClick={addQuestion}>Add </div>
-                    </div>
+                    </div>}
                     <div style={styles.footerRow}>
-                        <div style={{...styles.bigBtn,backgroundColor:'rgb(102,153,255)',marginRight:'0.05in'}}>Upload resume</div>
-                        <div style={{...styles.bigBtn,backgroundColor:'rgb(255,124,128)',marginLeft:'0.05in'}}>Upload job post</div>
+                        <div style={{...styles.bigBtn,backgroundColor:'rgb(102,153,255)',marginRight:'0.05in'}} onClick={()=>{
+                            if(addDoc){
+                                setDocument("")
+                                setAddDoc("")
+                            }
+                            else setAddDoc("resume")
+                        }}>{addDoc?"Cancel":"Add from resume"}</div>
+                        <div style={{...styles.bigBtn,backgroundColor:'rgb(255,124,128)',marginLeft:'0.05in'}} onClick={()=>{
+                            if(addDoc) alert(addDoc+"-"+document)
+                            else setAddDoc("job")
+                        }}>{addDoc?"Upload":"Add from job post"}</div>
                     </div>
                 </div>
             </div>}
@@ -320,7 +342,7 @@ function Home() {
                         </div>
                     ))}
                 </div>
-                <div style={{...styles.footer,color:'white',margin:'0.1in'}}>
+                <div style={{...styles.footer,color:'white',marginBottom:'0.1in',marginRight:'0.1in',marginLeft:'0.1in'}}>
                     <div>You can now store 1 interview session for free. <u onClick={()=>navigate("../account")}>Upgrade to premium</u> for more storage!</div>
                 </div>
             </div>}
