@@ -14,12 +14,16 @@ function Home() {
     const [newQuestion,setNewQuestion]=useState("")
     const [questions,setQuestions]=useState([])
     const [records,setRecords]=useState([])
+    const [currentRecord,setCurrentRecord]=useState("")
+    const [recordQuestions,setRecordQuestions]=useState([])
     const [pageType,setPageType]=useState("Questions")
     const [addDoc,setAddDoc]=useState("")
     const [document,setDocument]=useState("")
     const [isLoading,setIsLoading]=useState("")
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
     const [repeatRecords,setRepeatRecords] = useState(false)
+    const [expandType,setExpandType] = useState("")
+    const [expandIndex,setExpandIndex] = useState(-1)
     function shuffle(array) {
         let currentIndex = array.length;
       
@@ -208,6 +212,28 @@ function Home() {
             setIsLoading("")
         })
     }
+    const getRecordQuestions=(recordedTime)=>{
+        setCurrentRecord(recordedTime)
+        axios({
+            url:process.env.REACT_APP_BACKEND+'records/questions',
+            method:'POST',
+            timeout: 5000,
+            headers: {
+                'Content-Type': 'application/json',
+                'token':localStorage.getItem('token')
+            },
+            data:JSON.stringify({
+                recordedTime:recordedTime
+            })
+        }).then((response)=>{
+            if(response.data.status==="success")setRecordQuestions(response.data.questions.reverse())
+            else if(response.data.status==='token missing' || response.data.status==='session expired' || response.data.status==='invalid token'){
+                localStorage.clear()
+                alert("Session expired. Please login again")
+                window.location.assign(window.location.origin);
+            }
+        }).catch((error)=>{})
+    }
     useEffect(() => {
         const handleResize = () => {
             setWindowWidth(window.innerWidth);
@@ -382,6 +408,13 @@ function Home() {
             position:'absolute',
             left:0,
             top:0
+        },
+        recordQuestion:{
+            backgroundColor:'white',
+            display:'flex',
+            flexDirection:'column',
+            margin:'0.1in',
+            borderRadius:'0.075in'
         }
     }
     return (
@@ -448,21 +481,48 @@ function Home() {
             </div>}
             {(windowWidth>=700 || pageType==="Records") && <div style={{...styles.half, backgroundColor:'rgb(102,153,255)'}}>
                 <div style={{...styles.header, flexDirection:(windowWidth>=700?'row':'row-reverse')}}>
-                    <img style={{height:'0.4in'}} src={cancel_btn}/>
-                    <div style={styles.recordTitle}>Your record</div>
+                    {currentRecord && <img style={{height:'0.4in'}} src={cancel_btn} onClick={()=>{
+                        setCurrentRecord("")
+                        setExpandIndex(-1)
+                        setExpandType("")
+                    }}/>}
+                    <div style={styles.recordTitle}>{currentRecord?currentRecord:"Your record"}</div>
                     <img style={{height:'0.4in'}} src={account_btn} onClick={()=>navigate("../account")}/>
                 </div>
                 <div style={{...styles.list,backgroundColor:'rgb(150,220,248'}}>
-                    {records.map((item,index)=>{
+                    {!currentRecord && records.map((item,index)=>{
                         let expire=expireCalc(item)
                         return <div style={styles.listItem} key={index}>
-                            <div style={styles.questionContent}>
+                            <div style={styles.questionContent} onClick={()=>{if(expire)getRecordQuestions(timeFormat(item.recordedTime))}}>
                                 <b style={{color:'rgb(87,87,87)'}}>{timeFormat(item.recordedTime)}</b>
                                 <div style={{color:'rgb(102,153,255)'}}>{expire?("Expire in "+expire+(expire<=1?" day":" days")):"Reviewing..."}</div>
                             </div>
                             {expire && <div style={{...styles.deleteBtn,backgroundColor:'rgb(255,124,128)'}} onClick={()=>{deleteRecord(timeFormat(item.recordedTime))}}>X</div>}
                         </div>
                     })}
+                    {currentRecord && recordQuestions.map((item,index)=>(
+                        <div style={styles.recordQuestion} key={index}>
+                            <div style={{...styles.questionContent, color:'rgb(87,87,87)'}}>
+                                {item.question}
+                            </div>
+                            <div style={{
+                                color:'rgb(102,153,255)',
+                                display:'flex',
+                                flexDirection:'row',
+                                paddingLeft:'0.1in',
+                                paddingBottom:'0.1in'
+                            }}>
+                                <div style={{textDecoration:(expandType==="answer" && expandIndex===index)?'underline':'', paddingRight:'0.2in'}} onClick={()=>{setExpandType("answer");setExpandIndex(index)}}>Answer</div>
+                                <div style={{textDecoration:(expandType==="review" && expandIndex===index)?'underline':''}} onClick={()=>{setExpandType("review");setExpandIndex(index)}}>Review</div>
+                            </div>
+                            {expandType==="answer" && expandIndex===index && <div style={{...styles.questionContent, color:'rgb(87,87,87)'}}>
+                                {item.answer}
+                            </div>}
+                            {expandType==="review" && expandIndex===index && <div style={{...styles.questionContent, color:'rgb(87,87,87)'}}>
+                                {item.review}
+                            </div>}
+                        </div>
+                    ))}
                 </div>
                 <div style={{...styles.footer,color:'white',marginBottom:'0.1in',marginRight:'0.1in',marginLeft:'0.1in'}}>
                     <div>You can now store 1 interview session for free. <u onClick={()=>navigate("../account")}>Upgrade to premium</u> for more storage!</div>
