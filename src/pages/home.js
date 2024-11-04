@@ -19,6 +19,7 @@ function Home() {
     const [document,setDocument]=useState("")
     const [isLoading,setIsLoading]=useState("")
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+    const [repeatRecords,setRepeatRecords] = useState(false)
     function shuffle(array) {
         let currentIndex = array.length;
       
@@ -78,7 +79,10 @@ function Home() {
                 'token':localStorage.getItem('token')
             }
         }).then((response)=>{
-            if(response.data.status==="success")setRecords(response.data.records.reverse())
+            if(response.data.status==="success"){
+                setRepeatRecords((response.data.records.filter((record)=>(record.expire===null))).length!==0)
+                setRecords(response.data.records.reverse())
+            }
             else if(response.data.status==='token missing' || response.data.status==='session expired' || response.data.status==='invalid token'){
                 localStorage.clear()
                 alert("Session expired. Please login again")
@@ -142,6 +146,33 @@ function Home() {
             alert("Failed to delete question")
         })
     }
+    const deleteRecord=(recordedTime)=>{
+        if(!window.confirm("You want to delete record for "+recordedTime+" ?"))return
+        axios({
+            url:process.env.REACT_APP_BACKEND+'records/delete',
+            method:'POST',
+            timeout: 5000,
+            headers: {
+                'Content-Type': 'application/json',
+                'token':localStorage.getItem('token')
+            },
+            data:JSON.stringify({
+                recordedTime:recordedTime
+            })
+        }).then((response)=>{
+            if(response.data.status==="success"){
+                setRecords(records.filter((record)=>timeFormat(record.recordedTime)!==recordedTime))
+            }
+            else if(response.data.status==='token missing' || response.data.status==='session expired' || response.data.status==='invalid token'){
+                localStorage.clear()
+                alert("Session expired. Please login again")
+                window.location.assign(window.location.origin);
+            }
+            else alert("Failed to delete record")
+        }).catch((error)=>{
+            alert("Failed to delete record")
+        })
+    }
     const addDocument=()=>{
         if(document==="" || addDoc==="")return
         setIsLoading("questions")
@@ -192,6 +223,18 @@ function Home() {
         getQuestions()
         getRecords()
     }, []);
+    useEffect(() => {
+        getQuestions()
+        getRecords()
+        
+        const interval = setInterval(() => {
+            if(repeatRecords)getRecords()
+        }, 60000); // 1 minute in milliseconds
+      
+        return () => {
+            clearInterval(interval);
+        };
+    }, [repeatRecords]);
     const styles={
         screen:{
             height:'100svh',
@@ -417,7 +460,7 @@ function Home() {
                                 <b style={{color:'rgb(87,87,87)'}}>{timeFormat(item.recordedTime)}</b>
                                 <div style={{color:'rgb(102,153,255)'}}>{expire?("Expire in "+expire+(expire<=1?" day":" days")):"Reviewing..."}</div>
                             </div>
-                            <div style={{...styles.deleteBtn,backgroundColor:'rgb(255,124,128)'}}>X</div>
+                            {expire && <div style={{...styles.deleteBtn,backgroundColor:'rgb(255,124,128)'}} onClick={()=>{deleteRecord(timeFormat(item.recordedTime))}}>X</div>}
                         </div>
                     })}
                 </div>

@@ -90,9 +90,6 @@ function Interview() {
     useEffect(() => {
         speak(question)
     },[question])
-    useEffect(() => {
-        console.log("1. "+transcript)
-    },[transcript])
     const styles={
         screen:{
             width:'100vw',
