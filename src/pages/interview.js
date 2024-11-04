@@ -39,12 +39,53 @@ function Interview() {
     const [iter, setIter]=useState(0)
     const [question, setQuestion]=useState(questions[iter])
     const [answers, setAnswers]=useState(new Array(questions.length).fill(null))
-    const [mp3, setMp3]=useState(null)
+    function getTimestamp() {
+        const localDate = new Date();
+        const year = localDate.getFullYear();
+        const month = String(localDate.getMonth() + 1).padStart(2, '0');
+        const day = String(localDate.getDate()).padStart(2, '0');
+        const hours = String(localDate.getHours()).padStart(2, '0');
+        const minutes = String(localDate.getMinutes()).padStart(2, '0');
+        const seconds = String(localDate.getSeconds()).padStart(2, '0');
+        return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+    }
     const speak=(content)=>{
         if(listening)return
         speechSynthesis.cancel();
         cur_speech.text=content
         speechSynthesis.speak(cur_speech)
+    }
+    const addRecord=()=>{
+        if(answers.filter((answer)=>answer!==null).length===0){
+            if(window.confirm("You have no answers to submit for review. Do you want to exit instead"))navigate('../home')
+            return
+        }
+        axios({
+            url:process.env.REACT_APP_BACKEND+'records/add',
+            method:'POST',
+            timeout: 5000,
+            headers: {
+                'Content-Type': 'application/json',
+                'token':localStorage.getItem('token')
+            },
+            data:JSON.stringify({
+                questions:questions,
+                answers:answers,
+                timeStamp:getTimestamp()
+            })
+        }).then((response)=>{
+            if(response.data.status==="success"){
+                navigate('../home')
+            }
+            else if(response.data.status==='token missing' || response.data.status==='session expired' || response.data.status==='invalid token'){
+                localStorage.clear()
+                alert("Session expired. Please login again")
+                window.location.assign(window.location.origin);
+            }
+            else alert("Failed to upload your interview")
+        }).catch((error)=>{
+            alert("Failed to upload your interview")
+        })
     }
     useEffect(() => {
         speak(question)
@@ -183,8 +224,7 @@ function Interview() {
                         setSpeaking(false)
                         speechSynthesis.cancel()
                         if(window.confirm("You want to end and submit for review?")){
-                            console.log(answers)
-                            navigate('../home')
+                            addRecord()
                         }
                         return
                     }

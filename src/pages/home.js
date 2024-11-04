@@ -34,6 +34,22 @@ function Home() {
             array[randomIndex], array[currentIndex]];
         }
     }
+    function timeFormat(sqlTimeStr) {
+        const localDate = new Date(sqlTimeStr);
+        const year = localDate.getFullYear();
+        const month = String(localDate.getMonth() + 1).padStart(2, '0');
+        const day = String(localDate.getDate()).padStart(2, '0');
+        const hours = String(localDate.getHours()).padStart(2, '0');
+        const minutes = String(localDate.getMinutes()).padStart(2, '0');
+        const seconds = String(localDate.getSeconds()).padStart(2, '0');
+        return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+    }
+    function expireCalc(record){
+        if(!record.expire)return null
+        let recordedTime = new Date(record.recordedTime)
+        let expirationTime = recordedTime.setDate(recordedTime.getDate() + record.expire);
+        return Math.ceil((expirationTime - new Date()) / (1000 * 60 * 60 * 24));
+    }
     const getQuestions=()=>{
         axios({
             url:process.env.REACT_APP_BACKEND+'questions/get',
@@ -45,6 +61,24 @@ function Home() {
             }
         }).then((response)=>{
             if(response.data.status==="success")setQuestions(response.data.questions.reverse())
+            else if(response.data.status==='token missing' || response.data.status==='session expired' || response.data.status==='invalid token'){
+                localStorage.clear()
+                alert("Session expired. Please login again")
+                window.location.assign(window.location.origin);
+            }
+        }).catch((error)=>{})
+    }
+    const getRecords=()=>{
+        axios({
+            url:process.env.REACT_APP_BACKEND+'records/get',
+            method:'POST',
+            timeout: 5000,
+            headers: {
+                'Content-Type': 'application/json',
+                'token':localStorage.getItem('token')
+            }
+        }).then((response)=>{
+            if(response.data.status==="success")setRecords(response.data.records.reverse())
             else if(response.data.status==='token missing' || response.data.status==='session expired' || response.data.status==='invalid token'){
                 localStorage.clear()
                 alert("Session expired. Please login again")
@@ -155,51 +189,8 @@ function Home() {
         };
     }, []);
     useEffect(() => {
-        setRecords([
-            {
-                timestamp:"10/27/2024 - 10:30am",
-                expire:1,
-                time:3600,
-                questionCount:10
-            },
-            {
-                timestamp:"10/27/2024 - 10:28am",
-                expire:7,
-                time:60,
-                questionCount:10
-            },
-            {
-                timestamp:"10/27/2024 - 10:15am",
-                expire:7,
-                time:30,
-                questionCount:10
-            },
-            {
-                timestamp:"10/26/2024 - 10:30am",
-                expire:7,
-                time:62,
-                questionCount:10
-            },
-            {
-                timestamp:"10/25/2024 - 10:30am",
-                expire:7,
-                time:3602,
-                questionCount:10
-            },
-            {
-                timestamp:"10/24/2024 - 10:30am",
-                expire:7,
-                time:3660,
-                questionCount:10
-            },
-            {
-                timestamp:"10/23/2024 - 10:30am",
-                expire:7,
-                time:5420,
-                questionCount:10
-            }
-        ])
         getQuestions()
+        getRecords()
     }, []);
     const styles={
         screen:{
@@ -209,6 +200,7 @@ function Home() {
             backgroundColor:'white',
             fontSize:'0.17in',
             position:'relative',
+            userSelect:'none'
         },
         selectBox:{
             flexGrow:1,
@@ -265,8 +257,7 @@ function Home() {
             borderRadius:'0.075in',
             display:'flex',
             flexDirection:'column',
-            justifyContent:'center',
-            userSelect:'none'
+            justifyContent:'center'
         },
         recordTitle:{
             flexGrow:1,
@@ -284,8 +275,7 @@ function Home() {
             height:'fit-content',
             display:'flex',
             flexDirection:'column',
-            paddingTop:'0.1in',
-            userSelect:'none'
+            paddingTop:'0.1in'
         },
         footerRow:{
             display:'flex',
@@ -302,8 +292,7 @@ function Home() {
             display:'flex',
             flexDirection:'column',
             justifyContent:'center',
-            flexGrow:1,
-            userSelect:'none'
+            flexGrow:1
         },
         listItem:{
             backgroundColor:'white',
@@ -324,7 +313,6 @@ function Home() {
             justifyContent:'center',
             padding:'0.1in',
             fontSize:'0.2in',
-            userSelect:'none',
             borderTopRightRadius:'0.075in',
             borderBottomRightRadius:'0.075in'
         },
@@ -422,16 +410,16 @@ function Home() {
                     <img style={{height:'0.4in'}} src={account_btn} onClick={()=>navigate("../account")}/>
                 </div>
                 <div style={{...styles.list,backgroundColor:'rgb(150,220,248'}}>
-                    {records.map((item,index)=>(
-                        <div style={styles.listItem} key={index}>
+                    {records.map((item,index)=>{
+                        let expire=expireCalc(item)
+                        return <div style={styles.listItem} key={index}>
                             <div style={styles.questionContent}>
-                                <b style={{color:'rgb(87,87,87)'}}>{item.timestamp}</b>
-                                <div style={{color:'rgb(102,153,255)'}}>{"Expire in "+item.expire+(item.expire<=1?" day":" days")}</div>
-                                <div>{item.questionCount+" questions answered and reviewed"}</div>
+                                <b style={{color:'rgb(87,87,87)'}}>{timeFormat(item.recordedTime)}</b>
+                                <div style={{color:'rgb(102,153,255)'}}>{expire?("Expire in "+expire+(expire<=1?" day":" days")):"Reviewing..."}</div>
                             </div>
                             <div style={{...styles.deleteBtn,backgroundColor:'rgb(255,124,128)'}}>X</div>
                         </div>
-                    ))}
+                    })}
                 </div>
                 <div style={{...styles.footer,color:'white',marginBottom:'0.1in',marginRight:'0.1in',marginLeft:'0.1in'}}>
                     <div>You can now store 1 interview session for free. <u onClick={()=>navigate("../account")}>Upgrade to premium</u> for more storage!</div>
