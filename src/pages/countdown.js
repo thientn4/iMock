@@ -4,6 +4,7 @@ import {useLocation, useNavigate} from 'react-router-dom';
 import cancel_btn from"../assets/cancel_btn.png"
 import horizontal_logo_mono from"../assets/horizontal_logo_mono.png"
 import loading from"../assets/loading.gif"
+import blue_logo from"../assets/blue_logo.png"
 
 
 let timeoutIDs=[]
@@ -60,7 +61,8 @@ function Countdown() {
             flexDirection:'column',
             justifyContent:'center',
             marginBottom:'0.5in',
-            position:'relative'
+            position:'relative',
+            alignItems:'center'
         },
         looper:{
             height:'1.5in',
@@ -121,7 +123,8 @@ function Countdown() {
         }}>
             <div style={styles.clock}>
                 {clicked && <img style={styles.looper} src={loading}/>}
-                <div>{second}</div>
+                {clicked && <div>{second}</div>}
+                {!clicked && <img style={{width:'0.5in'}} src={blue_logo}/>}
             </div>
             <input disabled={clicked} style={styles.inputBox} placeholder="Give this interview a name" value={job} onChange={(event)=>{setJob(event.target.value)}}/>
             <div style={styles.btn} onClick={countdown}>start</div>
