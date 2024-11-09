@@ -24,6 +24,8 @@ function Home() {
     const [repeatRecords,setRepeatRecords] = useState(false)
     const [expandType,setExpandType] = useState("")
     const [expandIndex,setExpandIndex] = useState(-1)
+    const [editRecord,setEditRecord] = useState("")
+    const [newJob,setNewJob] = useState("")
     function shuffle(array) {
         let currentIndex = array.length;
       
@@ -175,6 +177,34 @@ function Home() {
             else alert("Failed to delete record")
         }).catch((error)=>{
             alert("Failed to delete record")
+        })
+    }
+    const renameRecord=(oldJob)=>{
+        if(oldJob===newJob)return
+        axios({
+            url:process.env.REACT_APP_BACKEND+'records/rename',
+            method:'POST',
+            timeout: 5000,
+            headers: {
+                'Content-Type': 'application/json',
+                'token':localStorage.getItem('token')
+            },
+            data:JSON.stringify({
+                recordedTime:timeFormat(editRecord),
+                job:newJob
+            })
+        }).then((response)=>{
+            if(response.data.status==="success"){
+                getRecords()
+            }
+            else if(response.data.status==='token missing' || response.data.status==='session expired' || response.data.status==='invalid token'){
+                localStorage.clear()
+                alert("Session expired. Please login again")
+                window.location.assign(window.location.origin);
+            }
+            else alert("Failed to rename record")
+        }).catch((error)=>{
+            alert("Failed to rename record")
         })
     }
     const addDocument=()=>{
@@ -417,7 +447,10 @@ function Home() {
     }
     return (
       <div style={styles.screen}>
-        {windowWidth<700 && <div style={{...styles.header, backgroundColor:'rgb(211,211,211)'}}>
+        {windowWidth<700 && <div style={{...styles.header, backgroundColor:'rgb(211,211,211)'}} onClick={()=>{
+            setNewJob("")
+            setEditRecord("")
+        }}>
             <select disabled={addDoc} style={styles.selectBox} value={pageType} onChange={(event)=>{setPageType(event.target.value)}}>
                 <option>Questions</option>
                 <option>Records</option>
@@ -492,12 +525,46 @@ function Home() {
                     {!currentRecord && records.map((item,index)=>{
                         let expire=expireCalc(item)
                         return <div style={{...styles.listItem,opacity:(expire?1:0.7)}} key={index}>
-                            <div style={styles.questionContent} onClick={()=>{if(expire)getRecordQuestions(timeFormat(item.recordedTime))}}>
-                                <b style={{color:'rgb(87,87,87)'}}>{item.job}</b>
-                                <div style={{color:'rgb(87,87,87)'}}>{timeFormat(item.recordedTime)}</div>
-                                <div style={{color:'rgb(102,153,255)'}}>{expire?("Expire in "+expire+(expire<=1?" day":" days")):"Reviewing..."}</div>
+                            <div style={styles.questionContent}>
+                                <div style={{color:'rgb(102,153,255)', display:'flex', flexDirection:'row'}}>
+                                    {editRecord!==item.recordedTime && <b style={{color:'rgb(87,87,87)', paddingRight:'0.1in'}}>{item.job}</b>}
+                                    {editRecord===item.recordedTime && <input style={{...styles.inputBox, borderRadius:'0.04in'}} value={newJob} onChange={(event)=>setNewJob(event.target.value)}/>}
+                                    {!repeatRecords && <div onClick={()=>{
+                                        if(editRecord===item.recordedTime){
+                                            renameRecord(item.job)
+                                            setNewJob("")
+                                            setEditRecord("")
+                                        }else{
+                                            setNewJob(item.job)
+                                            setEditRecord(item.recordedTime)
+                                        }
+                                    }}>{(editRecord===item.recordedTime)?"Done":"Rename"}</div>}
+                                    {editRecord===item.recordedTime && <div style={{paddingLeft:'0.1in', color:'rgb(255,124,128)'}} onClick={()=>{
+                                        setNewJob("")
+                                        setEditRecord("")
+                                    }}>Cancel</div>}
+                                    {editRecord!==item.recordedTime && <div style={{flexGrow:1}} onClick={()=>{
+                                        if(editRecord===item.recordedTime)return
+                                        if(expire){
+                                            setNewJob("")
+                                            setEditRecord("")
+                                            getRecordQuestions(timeFormat(item.recordedTime))
+                                        }
+                                    }}></div>}
+                                </div>
+                                <div onClick={()=>{
+                                    if(editRecord===item.recordedTime)return
+                                    if(expire){
+                                        setNewJob("")
+                                        setEditRecord("")
+                                        getRecordQuestions(timeFormat(item.recordedTime))
+                                    }
+                                }}>
+                                    <div style={{color:'rgb(87,87,87)'}}>{timeFormat(item.recordedTime)}</div>
+                                    <div style={{color:'rgb(102,153,255)'}}>{expire?("Expire in "+expire+(expire<=1?" day":" days")):"Reviewing..."}</div>
+                                </div>
                             </div>
-                            {expire && <div style={{...styles.deleteBtn,backgroundColor:'rgb(255,124,128)'}} onClick={()=>{deleteRecord(timeFormat(item.recordedTime))}}>X</div>}
+                            {expire && editRecord!==item.recordedTime && <div style={{...styles.deleteBtn,backgroundColor:'rgb(255,124,128)'}} onClick={()=>{deleteRecord(timeFormat(item.recordedTime))}}>X</div>}
                         </div>
                     })}
                     {currentRecord && recordQuestions.map((item,index)=>(
