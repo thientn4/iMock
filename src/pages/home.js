@@ -527,7 +527,23 @@ function Home() {
                         return <div style={{...styles.listItem,opacity:(expire?1:0.7)}} key={index}>
                             <div style={styles.questionContent}>
                                 <div style={{color:'rgb(102,153,255)', display:'flex', flexDirection:'row'}}>
-                                    {editRecord!==item.recordedTime && <b style={{color:'rgb(87,87,87)', paddingRight:'0.1in'}}>{item.job}</b>}
+                                    {editRecord!==item.recordedTime && <div style={{
+                                        color:'rgb(87,87,87)', 
+                                        paddingRight:'0.1in', 
+                                        fontWeight:'bold',
+                                        textOverflow: 'ellipsis',
+                                        overflow: 'hidden',
+                                        whiteSpace: 'nowrap',
+                                        flexGrow:1,
+                                        width:0
+                                    }} onClick={()=>{
+                                        if(editRecord===item.recordedTime)return
+                                        if(expire){
+                                            setNewJob("")
+                                            setEditRecord("")
+                                            getRecordQuestions(timeFormat(item.recordedTime))
+                                        }
+                                    }}>{item.job}</div>}
                                     {editRecord===item.recordedTime && <input 
                                         style={{...styles.inputBox, borderRadius:'0.04in'}} 
                                         value={newJob} 
@@ -554,14 +570,6 @@ function Home() {
                                         setNewJob("")
                                         setEditRecord("")
                                     }}>Cancel</div>}
-                                    {editRecord!==item.recordedTime && <div style={{flexGrow:1}} onClick={()=>{
-                                        if(editRecord===item.recordedTime)return
-                                        if(expire){
-                                            setNewJob("")
-                                            setEditRecord("")
-                                            getRecordQuestions(timeFormat(item.recordedTime))
-                                        }
-                                    }}></div>}
                                 </div>
                                 <div onClick={()=>{
                                     if(editRecord===item.recordedTime)return
