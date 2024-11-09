@@ -484,6 +484,7 @@ function Home() {
                         setExpandIndex(-1)
                         setExpandType("")
                     }}/>}
+                    {!currentRecord && <div style={{width:'0.4in'}}></div>}
                     <div style={styles.recordTitle}>{currentRecord?currentRecord:"Your record"}</div>
                     <img style={{height:'0.4in'}} src={account_btn} onClick={()=>navigate("../account")}/>
                 </div>
@@ -492,7 +493,8 @@ function Home() {
                         let expire=expireCalc(item)
                         return <div style={{...styles.listItem,opacity:(expire?1:0.7)}} key={index}>
                             <div style={styles.questionContent} onClick={()=>{if(expire)getRecordQuestions(timeFormat(item.recordedTime))}}>
-                                <b style={{color:'rgb(87,87,87)'}}>{timeFormat(item.recordedTime)}</b>
+                                <b style={{color:'rgb(87,87,87)'}}>{item.job}</b>
+                                <div style={{color:'rgb(87,87,87)'}}>{timeFormat(item.recordedTime)}</div>
                                 <div style={{color:'rgb(102,153,255)'}}>{expire?("Expire in "+expire+(expire<=1?" day":" days")):"Reviewing..."}</div>
                             </div>
                             {expire && <div style={{...styles.deleteBtn,backgroundColor:'rgb(255,124,128)'}} onClick={()=>{deleteRecord(timeFormat(item.recordedTime))}}>X</div>}

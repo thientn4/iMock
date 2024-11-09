@@ -23,8 +23,26 @@ function Login() {
         if(localStorage.getItem('token'))navigate("home")
     }, []);
     const login = async(obj)=>{
-        localStorage.setItem('token', obj.credential)
-        navigate("home")
+        axios({
+            url:process.env.REACT_APP_BACKEND+'login',
+            method:'POST',
+            timeout: 5000,
+            headers: {
+                'Content-Type': 'application/json',
+                'token':obj.credential
+            }
+        }).then((response)=>{
+            if(response.data.status==="success"){
+                localStorage.setItem('token', obj.credential)
+                localStorage.setItem('givenName', response.data.given_name)
+                localStorage.setItem('familyName', response.data.family_name)
+                localStorage.setItem('email', response.data.email)
+                navigate("home")
+            }
+            else alert("Failed to login")
+        }).catch((error)=>{
+            alert("Failed to login")
+        })
     }
     const styles={
         screen:{

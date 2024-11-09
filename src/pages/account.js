@@ -41,7 +41,7 @@ function Account() {
       <div style={styles.screen}>
         <div style={styles.container}>
             <img style={{width:'1.4in',paddingBottom:'0.25in'}} src={vertical_logo}/>
-            <b>ntmthien01@gmail.com</b>
+            <b>{localStorage.getItem("email")}</b>
             <div style={{...styles.btn,backgroundColor:'rgb(102,153,255)',marginTop:'0.4in',marginBottom:'0.1in'}} onClick={()=>{
                 localStorage.clear()
                 navigate("../")

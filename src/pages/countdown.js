@@ -11,13 +11,15 @@ function Countdown() {
     const questions=params.state.questions
     const [second,setSecond]=useState(10)
     const [clicked, setClicked]=useState(false)
+    const [job, setJob]=useState("")
     const styles={
         screen:{
             width:'100vw',
             height:'100svh',
             backgroundColor:'white',
             display:'flex',
-            flexDirection:'column'
+            flexDirection:'column',
+            userSelect:'none'
         },
         header:{
             height:'fit-content',
@@ -64,17 +66,32 @@ function Countdown() {
             position:'absolute',
             left:'0.25in',
             top:'0.25in'
+        },
+        inputBox:{
+            marginRight:'0.1in',
+            borderRadius:'0.075in',
+            borderColor:'grey',
+            border:'solid thin grey',
+            paddingLeft:'0.1in',
+            paddingRight:'0.1in',
+            padding:'0.1in',
+            outline:'none'
         }
     }
     const countdown=async ()=>{
         if(clicked)return
+        if(job.trim()===""){
+            alert("Please give this interview a name")
+            return
+        }
         setClicked(true)
         for(let i=0; i<=11; i++)
             setTimeout(()=>{
                 if(second-i>=0)setSecond(second-i)
                 if(second-i===-1)navigate("../interview",{
                     state:{
-                        questions:questions
+                        questions:questions,
+                        job:job.trim()
                     }
                 })
             },1000*i)
@@ -82,7 +99,7 @@ function Countdown() {
     return (
       <div style={styles.screen}>
         <div style={styles.header}>
-            <img style={{height:'0.4in',marginRight:'0.1in'}} src={cancel_btn} onClick={()=>navigate("../home")}/>
+            <img style={{height:'0.4in',marginRight:'0.1in', opacity:(clicked?0.5:1)}} src={cancel_btn} onClick={()=>{if(!clicked)navigate("../home")}}/>
             <img style={{height:'0.4in',marginRight:'0.1in'}} src={horizontal_logo_mono}/>
             <div style={{width:'0.4in'}}></div>
         </div>
@@ -97,6 +114,7 @@ function Countdown() {
                 {clicked && <img style={styles.looper} src={loading}/>}
                 <div>{second}</div>
             </div>
+            <input disabled={clicked} style={styles.inputBox} placeholder="Give this interview a name" value={job} onChange={(event)=>{setJob(event.target.value)}}/>
             <div style={styles.btn} onClick={countdown}>start</div>
         </div>
       </div>

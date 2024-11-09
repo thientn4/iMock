@@ -71,7 +71,8 @@ function Interview() {
             data:JSON.stringify({
                 questions:questions,
                 answers:answers,
-                timeStamp:getTimestamp()
+                timeStamp:getTimestamp(),
+                job:params.state.job
             })
         }).then((response)=>{
             if(response.data.status==="success"){
