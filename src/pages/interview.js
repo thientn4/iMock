@@ -176,8 +176,7 @@ function Interview() {
             display:'flex',
             flexDirection:'row-reverse',
 
-            border:'solid medium',
-            borderColor:transcript?'rgb(255,124,128)':'white',
+            border:'solid medium'
         }
     }
     return (
@@ -252,9 +251,9 @@ function Interview() {
                     resetTranscript()
                     SpeechRecognition.startListening({ continuous: true });
                 }
-            }}>{listening?"Done":(transcript?"Answer again":"Answer")}</div>
-            <div style={styles.transcript} id="transcript_box">
-                <div style={{padding:'0.1in'}}>{transcript}</div>
+            }}>{listening?"Done":((transcript || answers[iter])?"Answer again":"Answer")}</div>
+            <div style={{...styles.transcript, borderColor:(transcript || (answers[iter] && !listening))?'rgb(255,124,128)':'white'}} id="transcript_box">
+                <div style={{padding:'0.1in'}}>{(answers[iter] && !listening)?answers[iter]:transcript}</div>
             </div>
         </div>
       </div>

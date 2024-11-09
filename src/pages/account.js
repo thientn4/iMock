@@ -46,7 +46,7 @@ function Account() {
                 localStorage.clear()
                 navigate("../")
             }}>sign out</div>
-            <div style={{...styles.btn,backgroundColor:'rgb(255,124,128)',marginBottom:'0.25in'}} onClick={()=>{alert("iMock is still under testing. You can enjoy our free plan for now!")}}>buy jobs</div>
+            <div style={{...styles.btn,backgroundColor:'rgb(255,124,128)',marginBottom:'0.25in'}} onClick={()=>{alert("iMock is still under testing. You can enjoy our free plan for now!")}}>buy interviews</div>
             <img style={{width:'0.5in',paddingTop:'0.45in'}} src={cancel_blue_btn}  onClick={()=>navigate("../home")}/>
         </div>
       </div>
