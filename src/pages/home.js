@@ -255,7 +255,7 @@ function Home() {
         
         const interval = setInterval(() => {
             if(repeatRecords)getRecords()
-        }, 60000); // 1 minute in milliseconds
+        }, 30000); // 30 seconds in milliseconds
       
         return () => {
             clearInterval(interval);
@@ -283,8 +283,6 @@ function Home() {
         page:{
             display:'flex',
             flexDirection:'row',
-
-            
             position: 'absolute',
             top: windowWidth>=700?0:'0.6in',
             bottom: 0,
@@ -492,7 +490,7 @@ function Home() {
                 <div style={{...styles.list,backgroundColor:'rgb(150,220,248'}}>
                     {!currentRecord && records.map((item,index)=>{
                         let expire=expireCalc(item)
-                        return <div style={styles.listItem} key={index}>
+                        return <div style={{...styles.listItem,opacity:(expire?1:0.7)}} key={index}>
                             <div style={styles.questionContent} onClick={()=>{if(expire)getRecordQuestions(timeFormat(item.recordedTime))}}>
                                 <b style={{color:'rgb(87,87,87)'}}>{timeFormat(item.recordedTime)}</b>
                                 <div style={{color:'rgb(102,153,255)'}}>{expire?("Expire in "+expire+(expire<=1?" day":" days")):"Reviewing..."}</div>
@@ -512,8 +510,24 @@ function Home() {
                                 paddingLeft:'0.1in',
                                 paddingBottom:'0.1in'
                             }}>
-                                <div style={{textDecoration:(expandType==="answer" && expandIndex===index)?'underline':'', paddingRight:'0.2in'}} onClick={()=>{setExpandType("answer");setExpandIndex(index)}}>Answer</div>
-                                <div style={{textDecoration:(expandType==="review" && expandIndex===index)?'underline':''}} onClick={()=>{setExpandType("review");setExpandIndex(index)}}>Review</div>
+                                <div style={{textDecoration:(expandType==="answer" && expandIndex===index)?'underline':'', paddingRight:'0.2in'}} onClick={()=>{
+                                    if(expandType==="answer" &&expandIndex===index){
+                                        setExpandType("")
+                                        setExpandIndex(-1)
+                                    }else{
+                                        setExpandType("answer");
+                                        setExpandIndex(index)
+                                    }
+                                }}>Answer</div>
+                                <div style={{textDecoration:(expandType==="review" && expandIndex===index)?'underline':''}} onClick={()=>{
+                                    if(expandType==="review" &&expandIndex===index){
+                                        setExpandType("")
+                                        setExpandIndex(-1)
+                                    }else{
+                                        setExpandType("review");
+                                        setExpandIndex(index)
+                                    }
+                                }}>Review</div>
                             </div>
                             {expandType==="answer" && expandIndex===index && <div style={{...styles.questionContent, color:'rgb(87,87,87)'}}>
                                 {item.answer}
@@ -523,9 +537,6 @@ function Home() {
                             </div>}
                         </div>
                     ))}
-                </div>
-                <div style={{...styles.footer,color:'white',marginBottom:'0.1in',marginRight:'0.1in',marginLeft:'0.1in'}}>
-                    <div>You can now store 1 interview session for free. <u onClick={()=>navigate("../account")}>Upgrade to premium</u> for more storage!</div>
                 </div>
             </div>}
         </div>

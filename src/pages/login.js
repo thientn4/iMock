@@ -25,7 +25,7 @@ function Login() {
     const login = async(obj)=>{
         localStorage.setItem('token', obj.credential)
         navigate("home")
-      }
+    }
     const styles={
         screen:{
             width:'100vw',
@@ -79,13 +79,15 @@ function Login() {
                     <div style={{width: 'fit-content'}}>
                         <div style={styles.bigWelcome}>Welcome to iMock</div>
                         <div style={styles.smallWelcome}>Let's start acing those interviews!</div>
-                        <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}>
-                            <GoogleLogin 
-                                shape="circle"
-                                size="medium"
-                                onSuccess={(credential)=>login(credential)}
-                            />
-                        </GoogleOAuthProvider>
+                        <div style={{width:'fit-content'}}>
+                            <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}>
+                                <GoogleLogin 
+                                    shape="circle"
+                                    size="medium"
+                                    onSuccess={(credential)=>login(credential)}
+                                />
+                            </GoogleOAuthProvider>
+                        </div>
                     </div>
                 </div>
                 {windowWidth>=700 && <div style={styles.login}>

@@ -42,13 +42,11 @@ function Account() {
         <div style={styles.container}>
             <img style={{width:'1.4in',paddingBottom:'0.25in'}} src={vertical_logo}/>
             <b>ntmthien01@gmail.com</b>
-            <b style={{color:'rgb(102,153,255)'}}>free plan</b>
             <div style={{...styles.btn,backgroundColor:'rgb(102,153,255)',marginTop:'0.4in',marginBottom:'0.1in'}} onClick={()=>{
                 localStorage.clear()
                 navigate("../")
             }}>sign out</div>
-            <div style={{...styles.btn,backgroundColor:'rgb(255,124,128)',marginBottom:'0.25in'}} onClick={()=>{alert("iMock is still under testing. You can enjoy our free plan for now!")}}>premium upgrade</div>
-            <u style={{color:'rgb(102,153,255)'}} onClick={()=>{alert("iMock is still under testing. You can enjoy our free plan for now!")}}>what is in premium?</u>
+            <div style={{...styles.btn,backgroundColor:'rgb(255,124,128)',marginBottom:'0.25in'}} onClick={()=>{alert("iMock is still under testing. You can enjoy our free plan for now!")}}>buy jobs</div>
             <img style={{width:'0.5in',paddingTop:'0.45in'}} src={cancel_blue_btn}  onClick={()=>navigate("../home")}/>
         </div>
       </div>

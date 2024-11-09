@@ -251,7 +251,7 @@ function Interview() {
                     resetTranscript()
                     SpeechRecognition.startListening({ continuous: true });
                 }
-            }}>{listening?"Done":"Answer"}</div>
+            }}>{listening?"Done":(transcript?"Answer again":"Answer")}</div>
             <div style={styles.transcript} id="transcript_box">
                 <div style={{padding:'0.1in'}}>{transcript}</div>
             </div>
