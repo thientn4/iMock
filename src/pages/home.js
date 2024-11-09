@@ -528,7 +528,18 @@ function Home() {
                             <div style={styles.questionContent}>
                                 <div style={{color:'rgb(102,153,255)', display:'flex', flexDirection:'row'}}>
                                     {editRecord!==item.recordedTime && <b style={{color:'rgb(87,87,87)', paddingRight:'0.1in'}}>{item.job}</b>}
-                                    {editRecord===item.recordedTime && <input style={{...styles.inputBox, borderRadius:'0.04in'}} value={newJob} onChange={(event)=>setNewJob(event.target.value)}/>}
+                                    {editRecord===item.recordedTime && <input 
+                                        style={{...styles.inputBox, borderRadius:'0.04in'}} 
+                                        value={newJob} 
+                                        onChange={(event)=>setNewJob(event.target.value)}
+                                        onKeyDown={(event)=>{
+                                            if(event.key==='Enter'){
+                                                renameRecord(item.job)
+                                                setNewJob("")
+                                                setEditRecord("")
+                                            }
+                                        }}
+                                    />}
                                     {!repeatRecords && <div onClick={()=>{
                                         if(editRecord===item.recordedTime){
                                             renameRecord(item.job)
