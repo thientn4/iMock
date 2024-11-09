@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from 'axios';
 import {useLocation, useNavigate} from 'react-router-dom';
 import cancel_btn from"../assets/cancel_btn.png"
 import horizontal_logo_mono from"../assets/horizontal_logo_mono.png"
 import loading from"../assets/loading.gif"
 
+
+let timeoutIDs=[]
 function Countdown() {
     const navigate=useNavigate();
     const params=useLocation();
@@ -85,8 +87,8 @@ function Countdown() {
             return
         }
         setClicked(true)
-        for(let i=0; i<=11; i++)
-            setTimeout(()=>{
+        for(let i=0; i<=11; i++){
+            let timeoutID = setTimeout(()=>{
                 if(second-i>=0)setSecond(second-i)
                 if(second-i===-1)navigate("../interview",{
                     state:{
@@ -95,11 +97,18 @@ function Countdown() {
                     }
                 })
             },1000*i)
+            timeoutIDs.push(timeoutID)
+        }
     }
+    useEffect(() => {
+        return () => {
+            for(let i=0; i<timeoutIDs.length; i++)clearTimeout(timeoutIDs[i])
+        }; 
+    }, []);
     return (
       <div style={styles.screen}>
         <div style={styles.header}>
-            <img style={{height:'0.4in',marginRight:'0.1in', opacity:(clicked?0.5:1)}} src={cancel_btn} onClick={()=>{if(!clicked)navigate("../home")}}/>
+            <img style={{height:'0.4in',marginRight:'0.1in'}} src={cancel_btn} onClick={()=>navigate("../home")}/>
             <img style={{height:'0.4in',marginRight:'0.1in'}} src={horizontal_logo_mono}/>
             <div style={{width:'0.4in'}}></div>
         </div>
