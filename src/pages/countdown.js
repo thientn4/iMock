@@ -79,7 +79,8 @@ function Countdown() {
             paddingLeft:'0.1in',
             paddingRight:'0.1in',
             padding:'0.1in',
-            outline:'none'
+            outline:'none',
+            textAlign:'center'
         }
     }
     const countdown=async ()=>{
@@ -126,7 +127,7 @@ function Countdown() {
                 {clicked && <div>{second}</div>}
                 {!clicked && <img style={{width:'0.5in'}} src={blue_logo}/>}
             </div>
-            <input disabled={clicked} style={styles.inputBox} placeholder="Give this interview a name" value={job} onChange={(event)=>{setJob(event.target.value)}}/>
+            <input disabled={clicked} style={styles.inputBox} placeholder="Name this interview" value={job} onChange={(event)=>{setJob(event.target.value)}}/>
             <div style={styles.btn} onClick={countdown}>start</div>
         </div>
       </div>

@@ -56,7 +56,7 @@ function Interview() {
         speechSynthesis.speak(cur_speech)
     }
     const addRecord=()=>{
-        if(answers.filter((answer)=>answer!==null).length===0){
+        if(answers.filter((answer)=>(answer!==null && answer.trim()!=="")).length===0){
             if(window.confirm("You have no answers to submit for review. Do you want to exit instead"))navigate('../home')
             return
         }
