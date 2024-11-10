@@ -37,6 +37,8 @@ function Login() {
                 localStorage.setItem('email', response.data.email)
                 localStorage.setItem('documents', response.data.documents)
                 localStorage.setItem('interviews', response.data.interviews)
+                localStorage.setItem('resume', response.data.resume)
+                localStorage.setItem('jobpost', response.data.jobpost)
                 navigate("home")
             }
             else alert("Failed to login")

@@ -227,6 +227,7 @@ function Home() {
         }).then((response)=>{
             if(response.data.status==="success"){
                 localStorage.setItem("documents",parseInt(localStorage.getItem("documents"))-1)
+                localStorage.setItem((addDoc==='resume'?'resume':'jobpost'), document)
                 setDocument("")
                 setAddDoc("")
                 getQuestions()
@@ -631,7 +632,7 @@ function Home() {
                                         setExpandIndex(index)
                                     }
                                 }}>Answer</div>
-                                <div style={{textDecoration:(expandType==="review" && expandIndex===index)?'underline':''}} onClick={()=>{
+                                <div style={{textDecoration:(expandType==="review" && expandIndex===index)?'underline':'', paddingRight:'0.2in'}} onClick={()=>{
                                     if(expandType==="review" &&expandIndex===index){
                                         setExpandType("")
                                         setExpandIndex(-1)
@@ -640,12 +641,24 @@ function Home() {
                                         setExpandIndex(index)
                                     }
                                 }}>Review</div>
+                                <div style={{textDecoration:(expandType==="example" && expandIndex===index)?'underline':''}} onClick={()=>{
+                                    if(expandType==="example" &&expandIndex===index){
+                                        setExpandType("")
+                                        setExpandIndex(-1)
+                                    }else{
+                                        setExpandType("example");
+                                        setExpandIndex(index)
+                                    }
+                                }}>Example</div>
                             </div>
                             {expandType==="answer" && expandIndex===index && <div style={{...styles.questionContent, color:'rgb(87,87,87)'}}>
                                 {item.answer}
                             </div>}
                             {expandType==="review" && expandIndex===index && <div style={{...styles.questionContent, color:'rgb(87,87,87)'}}>
                                 {item.review}
+                            </div>}
+                            {expandType==="example" && expandIndex===index && <div style={{...styles.questionContent, color:'rgb(87,87,87)'}}>
+                                {item.example}
                             </div>}
                         </div>
                     ))}

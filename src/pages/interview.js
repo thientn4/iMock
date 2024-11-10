@@ -71,6 +71,8 @@ function Interview() {
             data:JSON.stringify({
                 questions:questions,
                 answers:answers,
+                resume:localStorage.getItem('resume'),
+                jobpost:localStorage.getItem('jobpost'),
                 timeStamp:getTimestamp(),
                 job:params.state.job
             })
