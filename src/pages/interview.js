@@ -76,6 +76,7 @@ function Interview() {
             })
         }).then((response)=>{
             if(response.data.status==="success"){
+                localStorage.setItem("interviews",parseInt(localStorage.getItem("interviews"))-1)
                 navigate('../home')
             }
             else if(response.data.status==='token missing' || response.data.status==='session expired' || response.data.status==='invalid token'){

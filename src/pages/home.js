@@ -226,6 +226,7 @@ function Home() {
             })
         }).then((response)=>{
             if(response.data.status==="success"){
+                localStorage.setItem("documents",parseInt(localStorage.getItem("documents"))-1)
                 setDocument("")
                 setAddDoc("")
                 getQuestions()
@@ -463,7 +464,7 @@ function Home() {
                     {windowWidth<700 && <img style={{height:'0.4in',marginRight:'0.1in'}} src={account_blue_btn}  onClick={()=>navigate("../account")}/>}
                     <input style={styles.inputBox} placeholder="Search your questions"/>
                     <img style={{borderRadius:'0.075in', height:'0.4in'}} src={interview_btn}  onClick={()=>{
-                        if(localStorage.getItem("interviews")==0){
+                        if(parseInt(localStorage.getItem("interviews"))<=0){
                             alert("You ran out of interviews")
                             return
                         }
@@ -506,7 +507,7 @@ function Home() {
                             }
                             else{ 
                                 console.log(localStorage.getItem("documents"))
-                                if(localStorage.getItem("documents")==0){
+                                if(parseInt(localStorage.getItem("documents"))<=0){
                                     alert("You ran out of document uploads")
                                     return
                                 }
@@ -520,7 +521,7 @@ function Home() {
                             }
                             else{
                                 console.log(localStorage.getItem("documents"))
-                                if(localStorage.getItem("documents")==0){
+                                if(parseInt(localStorage.getItem("documents"))<=0){
                                     alert("You ran out of document uploads")
                                     return
                                 }
