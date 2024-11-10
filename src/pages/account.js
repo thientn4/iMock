@@ -55,7 +55,7 @@ function Account() {
     return (
       <div style={styles.screen}>
         <div style={styles.container}>
-            <img style={{width:'1.4in',paddingBottom:'0.25in'}} src={vertical_logo}/>
+            <img style={{width:'1.1in',paddingBottom:'0.25in'}} src={vertical_logo}/>
             <b>{localStorage.getItem("email")}</b>
             <div style={{
                 width:'100%',
