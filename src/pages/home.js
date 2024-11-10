@@ -583,7 +583,9 @@ function Home() {
                                     <div style={{color:'rgb(102,153,255)'}}>{expire?("Expire in "+expire+(expire<=1?" day":" days")):"Reviewing..."}</div>
                                 </div>
                             </div>
-                            {expire && editRecord!==item.recordedTime && <div style={{...styles.deleteBtn,backgroundColor:'rgb(255,124,128)'}} onClick={()=>{deleteRecord(timeFormat(item.recordedTime))}}>X</div>}
+                            {expire && <div style={{...styles.deleteBtn,backgroundColor:'rgb(255,124,128)', opacity:(editRecord!==item.recordedTime)?1:0.5}} onClick={()=>{
+                                if(editRecord!==item.recordedTime)deleteRecord(timeFormat(item.recordedTime))
+                            }}>X</div>}
                         </div>
                     })}
                     {currentRecord && recordQuestions.map((item,index)=>(
