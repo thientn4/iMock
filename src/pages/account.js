@@ -62,16 +62,16 @@ function Account() {
                 paddingTop:'0.2in'
             }}>
                 <div style={{...styles.tblRow,marginBottom:'0.025in'}}>
-                    <div style={{...styles.cell, backgroundColor:'rgb(102,153,255)',marginRight:'0.025in', borderTopLeftRadius:'0.075in'}}>
+                    <div style={{...styles.cell, backgroundColor:'rgb(102,153,255)',marginRight:'0.025in', borderTopLeftRadius:'0.05in', borderTopRightRadius:'0.05in'}}>
                         <img src={tiny_doc} style={{height:'0.2in'}}/>
                     </div>
-                    <div style={{...styles.cell, backgroundColor:'rgb(102,153,255)', borderTopRightRadius:'0.075in'}}>
+                    <div style={{...styles.cell, backgroundColor:'rgb(102,153,255)', borderTopLeftRadius:'0.05in', borderTopRightRadius:'0.05in'}}>
                         <img src={tiny_interview} style={{height:'0.2in'}}/>
                     </div>
                 </div>
                 <div style={styles.tblRow}>
-                    <div style={{...styles.cell, backgroundColor:'rgb(211,211,211)',marginRight:'0.025in', borderBottomLeftRadius:'0.075in'}}>{localStorage.getItem("documents")}</div>
-                    <div style={{...styles.cell, backgroundColor:'rgb(211,211,211)', borderBottomRightRadius:'0.075in'}}>{localStorage.getItem("interviews")}</div>
+                    <div style={{...styles.cell, backgroundColor:'rgb(211,211,211)',marginRight:'0.025in', borderBottomLeftRadius:'0.05in', borderBottomRightRadius:'0.05in'}}>{localStorage.getItem("documents")}</div>
+                    <div style={{...styles.cell, backgroundColor:'rgb(211,211,211)', borderBottomLeftRadius:'0.05in', borderBottomRightRadius:'0.05in'}}>{localStorage.getItem("interviews")}</div>
                 </div>
             </div>
             <div style={{...styles.btn,backgroundColor:'rgb(255,124,128)',marginTop:'0.25in',marginBottom:'0.1in'}} onClick={()=>{

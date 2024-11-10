@@ -91,7 +91,7 @@ function Login() {
     }
     return (
       <div style={styles.screen}>
-            <div style={styles.logo}><img style={{height:'0.7in'}} src={horizontal_logo}/></div>
+            <div style={styles.logo}><img style={{height:'0.55in'}} src={horizontal_logo}/></div>
             <div style={styles.nonLogo}>
                 <div style={styles.login}>
                     <div style={{width: 'fit-content'}}>
