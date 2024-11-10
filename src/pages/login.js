@@ -24,7 +24,7 @@ function Login() {
     }, []);
     const login = async(obj)=>{
         axios({
-            url:process.env.REACT_APP_BACKEND+'login',
+            url:process.env.REACT_APP_BACKEND+'account/account',
             method:'POST',
             timeout: 5000,
             headers: {
@@ -34,9 +34,9 @@ function Login() {
         }).then((response)=>{
             if(response.data.status==="success"){
                 localStorage.setItem('token', obj.credential)
-                localStorage.setItem('givenName', response.data.given_name)
-                localStorage.setItem('familyName', response.data.family_name)
                 localStorage.setItem('email', response.data.email)
+                localStorage.setItem('documents', response.data.documents)
+                localStorage.setItem('interviews', response.data.interviews)
                 navigate("home")
             }
             else alert("Failed to login")

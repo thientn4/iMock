@@ -70,8 +70,8 @@ function Account() {
                     </div>
                 </div>
                 <div style={styles.tblRow}>
-                    <div style={{...styles.cell, backgroundColor:'rgb(211,211,211)',marginRight:'0.025in', borderBottomLeftRadius:'0.075in'}}>{100}</div>
-                    <div style={{...styles.cell, backgroundColor:'rgb(211,211,211)', borderBottomRightRadius:'0.075in'}}>{100}</div>
+                    <div style={{...styles.cell, backgroundColor:'rgb(211,211,211)',marginRight:'0.025in', borderBottomLeftRadius:'0.075in'}}>{localStorage.getItem("documents")}</div>
+                    <div style={{...styles.cell, backgroundColor:'rgb(211,211,211)', borderBottomRightRadius:'0.075in'}}>{localStorage.getItem("interviews")}</div>
                 </div>
             </div>
             <div style={{...styles.btn,backgroundColor:'rgb(255,124,128)',marginTop:'0.25in',marginBottom:'0.1in'}} onClick={()=>{

@@ -463,6 +463,10 @@ function Home() {
                     {windowWidth<700 && <img style={{height:'0.4in',marginRight:'0.1in'}} src={account_blue_btn}  onClick={()=>navigate("../account")}/>}
                     <input style={styles.inputBox} placeholder="Search your questions"/>
                     <img style={{borderRadius:'0.075in', height:'0.4in'}} src={interview_btn}  onClick={()=>{
+                        if(localStorage.getItem("interviews")==0){
+                            alert("You ran out of interviews")
+                            return
+                        }
                         let shuffled=[...questions]
                         shuffle(shuffled)
                         navigate("../countdown",{
@@ -500,12 +504,28 @@ function Home() {
                                 setDocument("")
                                 setAddDoc("")
                             }
-                            else setAddDoc("resume")
+                            else{ 
+                                console.log(localStorage.getItem("documents"))
+                                if(localStorage.getItem("documents")==0){
+                                    alert("You ran out of document uploads")
+                                    return
+                                }
+                                setAddDoc("resume")
+                            }
                         }}>{addDoc?"Cancel":"Upload resume"}</div>
                         <div style={{...styles.bigBtn,backgroundColor:'rgb(255,124,128)',marginLeft:'0.05in'}} onClick={()=>{
                             if(isLoading==='questions')return
-                            if(addDoc) addDocument()
-                            else setAddDoc("job post")
+                            if(addDoc){
+                                addDocument()
+                            }
+                            else{
+                                console.log(localStorage.getItem("documents"))
+                                if(localStorage.getItem("documents")==0){
+                                    alert("You ran out of document uploads")
+                                    return
+                                }
+                                setAddDoc("job post")
+                            }
                         }}>{addDoc?"Upload":"Upload job post"}</div>
                     </div>
                 </div>
