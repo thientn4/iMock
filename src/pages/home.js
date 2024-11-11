@@ -488,7 +488,13 @@ function Home() {
                         </div>)
                     })}
                 </div>}
-                {!isLoading && addDoc && <textarea  style={styles.jobPostInputBox} placeholder={"Quickly enter or paste your "+addDoc+" here (no styling needed)"} value={document} onChange={(event)=>{setDocument(event.target.value)}}/>}
+                {!isLoading && addDoc && <textarea  style={styles.jobPostInputBox} placeholder={
+                    (localStorage.getItem(addDoc==="resume"?"resume":"jobpost")==="null")
+                    ?
+                    `Quickly enter or paste your ${addDoc} here (no styling needed)`
+                    :
+                    `Quickly enter or paste your ${addDoc} here (no styling needed)\n\n\n\nYour latest ${addDoc}:\n\n\n\n${localStorage.getItem(addDoc==="resume"?"resume":"jobpost")}`
+                } value={document} onChange={(event)=>{setDocument(event.target.value)}}/>}
                 {isLoading==='questions' && <div style={styles.loading_screen}>
                     <div style={styles.loading_logo}>
                         <img style={styles.looper} src={loading}/>
@@ -508,7 +514,6 @@ function Home() {
                                 setAddDoc("")
                             }
                             else{ 
-                                console.log(localStorage.getItem("documents"))
                                 if(parseInt(localStorage.getItem("documents"))<=0){
                                     alert("You ran out of document uploads")
                                     return
@@ -522,7 +527,6 @@ function Home() {
                                 addDocument()
                             }
                             else{
-                                console.log(localStorage.getItem("documents"))
                                 if(parseInt(localStorage.getItem("documents"))<=0){
                                     alert("You ran out of document uploads")
                                     return
