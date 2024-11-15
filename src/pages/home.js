@@ -11,7 +11,6 @@ import interview_btn from"../assets/interview.png"
 
 function Home() {
     const navigate=useNavigate();
-    const [newQuestion,setNewQuestion]=useState("")
     const [questions,setQuestions]=useState([])
     const [records,setRecords]=useState([])
     const [currentRecord,setCurrentRecord]=useState("")
@@ -310,12 +309,12 @@ function Home() {
             flexDirection:'column',
             justifyContent:'center'
         },
-        recordTitle:{
+        title:{
             flexGrow:1,
-            color:'white',
             display:'flex',
             flexDirection:'column',
-            justifyContent:'center'
+            justifyContent:'center',
+            fontWeight:'bold'
         },
         list:{
             fontSize:'0.16in',
@@ -415,7 +414,7 @@ function Home() {
                 {!addDoc && <div style={styles.header}>
                     {windowWidth>=700 && <img style={{height:'0.4in',marginRight:'0.1in'}} src={logo} alt="logo"/>}
                     {windowWidth<700 && <img style={{height:'0.4in',marginRight:'0.1in'}} src={account_blue_btn} alt="account"  onClick={()=>navigate("../account")}/>}
-                    <input style={styles.inputBox} placeholder="Search your questions"/>
+                    <div style={{...styles.title,color:"rgb(102,153,255)"}}>Questions</div>
                     <img style={{borderRadius:'0.075in', height:'0.4in'}} src={interview_btn} alt="interview"  onClick={()=>{
                         if(questions.length<=0)return
                         if(parseInt(localStorage.getItem("interviews"))<=0){
@@ -488,7 +487,7 @@ function Home() {
                         setExpandType("")
                     }}/>}
                     {!currentRecord && <div style={{width:'0.4in'}}></div>}
-                    <div style={styles.recordTitle}>{currentRecord?currentRecord:"Your record"}</div>
+                    <div style={{...styles.title,color:"white"}}>{currentRecord?currentRecord:"Records"}</div>
                     <img style={{height:'0.4in'}} src={account_btn} alt="account" onClick={()=>navigate("../account")}/>
                 </div>
                 {!reviewedDoc && <div style={{...styles.list,backgroundColor:'rgb(150,220,248'}}>
