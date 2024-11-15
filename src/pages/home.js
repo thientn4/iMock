@@ -15,6 +15,9 @@ function Home() {
     const [questions,setQuestions]=useState([])
     const [records,setRecords]=useState([])
     const [currentRecord,setCurrentRecord]=useState("")
+    const [reviewedResume,setReviewedResume]=useState("")
+    const [reviewedJobPost,setReviewedJobPost]=useState("")
+    const [reviewedDoc,setReviewedDoc]=useState("")
     const [recordQuestions,setRecordQuestions]=useState([])
     const [pageType,setPageType]=useState("Questions")
     const [addDoc,setAddDoc]=useState("")
@@ -30,7 +33,7 @@ function Home() {
         let currentIndex = array.length;
       
         // While there remain elements to shuffle...
-        while (currentIndex != 0) {
+        while (currentIndex !== 0) {
       
           // Pick a remaining element...
           let randomIndex = Math.floor(Math.random() * currentIndex);
@@ -96,62 +99,6 @@ function Home() {
             }
         }).catch((error)=>{})
     }
-    const addQuestion=()=>{
-        if(newQuestion==="")return
-        axios({
-            url:process.env.REACT_APP_BACKEND+'questions/add',
-            method:'POST',
-            timeout: 5000,
-            headers: {
-                'Content-Type': 'application/json',
-                'token':localStorage.getItem('token')
-            },
-            data:JSON.stringify({
-                question:newQuestion
-            })
-        }).then((response)=>{
-            if(response.data.status==="success"){
-                setNewQuestion("")
-                setQuestions([{question:newQuestion, questionType:0}, ...questions])
-            }
-            else if(response.data.status==='token missing' || response.data.status==='session expired' || response.data.status==='invalid token'){
-                localStorage.clear()
-                alert("Session expired. Please login again")
-                window.location.assign(window.location.origin);
-            }
-            else alert("Failed to add question")
-        }).catch((error)=>{
-            alert("Failed to add question")
-        })
-    }
-    const deleteQuestion=(question)=>{
-        axios({
-            url:process.env.REACT_APP_BACKEND+'questions/delete',
-            method:'POST',
-            timeout: 5000,
-            headers: {
-                'Content-Type': 'application/json',
-                'token':localStorage.getItem('token')
-            },
-            data:JSON.stringify({
-                question:question
-            })
-        }).then((response)=>{
-            if(response.data.status==="success"){
-                let filteredQuestion=[...questions]
-                filteredQuestion.splice(filteredQuestion.indexOf(question),1)
-                setQuestions(filteredQuestion)
-            }
-            else if(response.data.status==='token missing' || response.data.status==='session expired' || response.data.status==='invalid token'){
-                localStorage.clear()
-                alert("Session expired. Please login again")
-                window.location.assign(window.location.origin);
-            }
-            else alert("Failed to delete question")
-        }).catch((error)=>{
-            alert("Failed to delete question")
-        })
-    }
     const deleteRecord=(recordedTime)=>{
         if(!window.confirm("You want to delete record for "+recordedTime+" ?"))return
         axios({
@@ -209,6 +156,10 @@ function Home() {
     }
     const addDocument=()=>{
         if(document==="" || addDoc==="")return
+        if(parseInt(localStorage.getItem("documents"))<=0){
+            alert("You ran out of document uploads")
+            return
+        }
         setIsLoading("questions")
         axios({
             url:process.env.REACT_APP_BACKEND+'questions/addDocument',
@@ -340,14 +291,15 @@ function Home() {
             paddingLeft:'0.1in',
             outline:'none'
         },
-        jobPostInputBox:{
+        docInputBox:{
             padding:'0.1in',
             paddingTop:'0.1in',
             paddingBottom:'0.1in',
             resize:'none',
             flexGrow:1,
             border:'none',
-            outline:'none'
+            outline:'none',
+            backgroundColor:'white'
         },
         smallBtn:{
             color:'white',
@@ -461,10 +413,10 @@ function Home() {
         <div style={styles.page}>
             {(windowWidth>=700 || pageType==="Questions") && <div style={styles.half}>
                 {!addDoc && <div style={styles.header}>
-                    {windowWidth>=700 && <img style={{height:'0.4in',marginRight:'0.1in'}} src={logo}/>}
-                    {windowWidth<700 && <img style={{height:'0.4in',marginRight:'0.1in'}} src={account_blue_btn}  onClick={()=>navigate("../account")}/>}
+                    {windowWidth>=700 && <img style={{height:'0.4in',marginRight:'0.1in'}} src={logo} alt="logo"/>}
+                    {windowWidth<700 && <img style={{height:'0.4in',marginRight:'0.1in'}} src={account_blue_btn} alt="account"  onClick={()=>navigate("../account")}/>}
                     <input style={styles.inputBox} placeholder="Search your questions"/>
-                    <img style={{borderRadius:'0.075in', height:'0.4in'}} src={interview_btn}  onClick={()=>{
+                    <img style={{borderRadius:'0.075in', height:'0.4in'}} src={interview_btn} alt="interview"  onClick={()=>{
                         if(questions.length<=0)return
                         if(parseInt(localStorage.getItem("interviews"))<=0){
                             alert("You ran out of interviews")
@@ -474,7 +426,7 @@ function Home() {
                         shuffle(shuffled)
                         navigate("../countdown",{
                             state:{
-                                questions:shuffled.slice(0,10).map((item)=>item.question)
+                                questions:["Thank you for interviewing with us. Can you introduce yourself?",...shuffled.slice(0,10).map((item)=>item.question)]
                             }
                         })
                     }}/>
@@ -484,11 +436,10 @@ function Home() {
                         let textTypes=["","Resume","Job Post"]
                         return (<div style={styles.listItem} key={index}>
                             <div style={styles.questionContent}>{item.question}<div style={{fontWeight:'bold',color:(textTypes[item.questionType]==='Resume'?'rgb(102,153,255)':'rgb(255,124,128)')}}>{textTypes[item.questionType]}</div></div>
-                            <div style={{...styles.deleteBtn,backgroundColor:'rgb(102,153,255)'}} onClick={()=>{deleteQuestion(item)}}>X</div>
                         </div>)
                     })}
                 </div>}
-                {!isLoading && addDoc && <textarea  style={styles.jobPostInputBox} placeholder={
+                {!isLoading && addDoc && <textarea  style={styles.docInputBox} placeholder={
                     (localStorage.getItem(addDoc==="resume"?"resume":"jobpost")==="null")
                     ?
                     `Quickly enter or paste your ${addDoc} here (no styling needed)`
@@ -497,15 +448,11 @@ function Home() {
                 } value={document} onChange={(event)=>{setDocument(event.target.value)}}/>}
                 {isLoading==='questions' && <div style={styles.loading_screen}>
                     <div style={styles.loading_logo}>
-                        <img style={styles.looper} src={loading}/>
-                        <img style={{width:'0.4in'}} src={blue_logo}/>
+                        <img style={styles.looper} src={loading}  alt="loading"/>
+                        <img style={{width:'0.4in'}} src={blue_logo} alt="logo"/>
                     </div>
                 </div>}
                 <div style={{...styles.footer, backgroundColor:addDoc?'rgb(211,211,211)':'white', opacity:isLoading==='questions'?0.5:1}}>
-                    {!addDoc && <div style={styles.footerRow}>
-                        <input style={styles.inputBox} placeholder="Interview question" value={newQuestion} onChange={(event)=>{setNewQuestion(event.target.value)}} onKeyDown={(event)=>{if(event.key==='Enter')addQuestion()}}/>
-                        <div style={{...styles.smallBtn, color:'grey', border:'solid thin grey'}} onClick={addQuestion}>Add </div>
-                    </div>}
                     <div style={styles.footerRow}>
                         <div style={{...styles.bigBtn,backgroundColor:'rgb(102,153,255)',marginRight:'0.05in'}} onClick={()=>{
                             if(isLoading==='questions')return
@@ -514,10 +461,6 @@ function Home() {
                                 setAddDoc("")
                             }
                             else{ 
-                                if(parseInt(localStorage.getItem("documents"))<=0){
-                                    alert("You ran out of document uploads")
-                                    return
-                                }
                                 setAddDoc("resume")
                             }
                         }}>{addDoc?"Cancel":"Upload resume"}</div>
@@ -527,10 +470,6 @@ function Home() {
                                 addDocument()
                             }
                             else{
-                                if(parseInt(localStorage.getItem("documents"))<=0){
-                                    alert("You ran out of document uploads")
-                                    return
-                                }
                                 setAddDoc("job post")
                             }
                         }}>{addDoc?"Upload":"Upload job post"}</div>
@@ -539,16 +478,20 @@ function Home() {
             </div>}
             {(windowWidth>=700 || pageType==="Records") && <div style={{...styles.half, backgroundColor:'rgb(102,153,255)'}}>
                 <div style={{...styles.header, flexDirection:(windowWidth>=700?'row':'row-reverse')}}>
-                    {currentRecord && <img style={{height:'0.4in'}} src={cancel_btn} onClick={()=>{
+                    {currentRecord && <img style={{height:'0.4in'}} src={cancel_btn} alt="cancel" onClick={()=>{
+                        if(reviewedDoc){
+                            setReviewedDoc("")
+                            return
+                        }
                         setCurrentRecord("")
                         setExpandIndex(-1)
                         setExpandType("")
                     }}/>}
                     {!currentRecord && <div style={{width:'0.4in'}}></div>}
                     <div style={styles.recordTitle}>{currentRecord?currentRecord:"Your record"}</div>
-                    <img style={{height:'0.4in'}} src={account_btn} onClick={()=>navigate("../account")}/>
+                    <img style={{height:'0.4in'}} src={account_btn} alt="account" onClick={()=>navigate("../account")}/>
                 </div>
-                <div style={{...styles.list,backgroundColor:'rgb(150,220,248'}}>
+                {!reviewedDoc && <div style={{...styles.list,backgroundColor:'rgb(150,220,248'}}>
                     {!currentRecord && records.map((item,index)=>{
                         let expire=expireCalc(item)
                         return <div style={{...styles.listItem,opacity:(expire?1:0.7)}} key={index}>
@@ -569,6 +512,8 @@ function Home() {
                                             setNewJob("")
                                             setEditRecord("")
                                             getRecordQuestions(timeFormat(item.recordedTime))
+                                            setReviewedJobPost(item.jobpost)
+                                            setReviewedResume(item.resume)
                                         }
                                     }}>{item.job}</div>}
                                     {editRecord===item.recordedTime && <input 
@@ -604,6 +549,8 @@ function Home() {
                                         setNewJob("")
                                         setEditRecord("")
                                         getRecordQuestions(timeFormat(item.recordedTime))
+                                        setReviewedJobPost(item.jobpost)
+                                        setReviewedResume(item.resume)
                                     }
                                 }}>
                                     <div style={{color:'rgb(87,87,87)'}}>{timeFormat(item.recordedTime)}</div>
@@ -666,7 +613,22 @@ function Home() {
                             </div>}
                         </div>
                     ))}
-                </div>
+                </div>}
+                {!reviewedDoc && currentRecord && <div style={{...styles.footer, backgroundColor:'rgb(102,153,255)', opacity:isLoading==='questions'?0.5:1}}>
+                    <div style={styles.footerRow}>
+                        <div style={{...styles.bigBtn,backgroundColor:'white',marginRight:'0.05in',color:'rgb(102,153,255)',opacity:reviewedResume?1:0.5}} onClick={()=>{
+                            if(reviewedResume){
+                                setReviewedDoc(reviewedResume)
+                            }
+                        }}>Reviewed resume</div>
+                        <div style={{...styles.bigBtn,backgroundColor:'white',marginLeft:'0.05in',color:'rgb(102,153,255)',opacity:reviewedJobPost?1:0.5}} onClick={()=>{
+                            if(reviewedJobPost){
+                                setReviewedDoc(reviewedJobPost)
+                            }
+                        }}>Reviewed job post</div>
+                    </div>
+                </div>}
+                {reviewedDoc && <textarea  style={styles.docInputBox} value={reviewedDoc} disabled={true}/>}
             </div>}
         </div>
       </div>
