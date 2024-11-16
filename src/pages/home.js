@@ -208,7 +208,7 @@ function Home() {
                 recordedTime:recordedTime
             })
         }).then((response)=>{
-            if(response.data.status==="success")setRecordQuestions(response.data.questions.reverse())
+            if(response.data.status==="success")setRecordQuestions(response.data.questions)
             else if(response.data.status==='token missing' || response.data.status==='session expired' || response.data.status==='invalid token'){
                 localStorage.clear()
                 alert("Session expired. Please login again")
