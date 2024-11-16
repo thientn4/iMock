@@ -163,7 +163,7 @@ function Home() {
         axios({
             url:process.env.REACT_APP_BACKEND+'questions/addDocument',
             method:'POST',
-            timeout: 5000,
+            timeout: 20000,
             headers: {
                 'Content-Type': 'application/json',
                 'token':localStorage.getItem('token')
@@ -613,7 +613,7 @@ function Home() {
                         </div>
                     ))}
                 </div>}
-                {!reviewedDoc && currentRecord && <div style={{...styles.footer, backgroundColor:'rgb(102,153,255)', opacity:isLoading==='questions'?0.5:1}}>
+                {!reviewedDoc && currentRecord && <div style={{...styles.footer, backgroundColor:'rgb(102,153,255)'}}>
                     <div style={styles.footerRow}>
                         <div style={{...styles.bigBtn,backgroundColor:'white',marginRight:'0.05in',color:'rgb(102,153,255)',opacity:reviewedResume?1:0.5}} onClick={()=>{
                             if(reviewedResume){
