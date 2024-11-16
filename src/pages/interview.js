@@ -171,7 +171,6 @@ function Interview() {
             height:'0.4in'
         },
         transcript:{
-            //height:'0.5in', 
             width:'100%', 
             whiteSpace:'nowrap', 
             overflow:'hidden',
@@ -248,15 +247,16 @@ function Interview() {
                         alert("Please enable iMock to use microphone")
                         return
                     }
-                    if(transcript){
+                    if(transcript || answers[iter]){
                         if(!window.confirm("Are you sure you want to delete and answer again?"))return
                     }
                     resetTranscript()
+                    answers[iter]=null
                     SpeechRecognition.startListening({ continuous: true });
                 }
             }}>{listening?"Done":((transcript || answers[iter])?"Answer again":"Answer")}</div>
-            <div style={{...styles.transcript, borderColor:(transcript || (answers[iter] && !listening))?'rgb(255,124,128)':'white'}} id="transcript_box">
-                <div style={{padding:'0.1in'}}>{(answers[iter] && !listening)?answers[iter]:transcript}</div>
+            <div style={{...styles.transcript, borderColor:(transcript || (answers[iter] && !listening))?'rgb(255,124,128)':'white', color:((answers[iter] || transcript) ? 'black':'white')}} id="transcript_box">
+                <div style={{padding:'0.1in'}}>{(answers[iter] && !listening)?answers[iter]:(transcript?transcript:'NULL')}</div>
             </div>
         </div>
       </div>
