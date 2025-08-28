@@ -7,7 +7,5 @@
   <li>Goole Gemini RestAPIs to support AI feedback for user's mock interview</li>
 </ul>
 <br/>
-<iframe
-src="https://www.youtube.com/watch?v=79piTHfBSns">
-</iframe>
+https://www.youtube.com/watch?v=79piTHfBSns
 <br/>
