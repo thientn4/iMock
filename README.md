@@ -4,7 +4,7 @@
 <ul>
   <li>Front-end interface is implemented with ReactJS (HTML, CSS, JavaScript).</li>
   <li>Back-end is built with ExpressJS with a database in MySQL.</li>
-  <li>Goole Gemini RestAPIs to support AI feedback for user's mock interview</li>
+  <li>Google Gemini RestAPIs to support AI feedback on user's mock interview</li>
 </ul>
 
 # Demo video
